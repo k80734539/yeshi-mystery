@@ -1,4 +1,4 @@
-const canAccuse=()=>!!(S.flags.anDone&&S.flags.cdDone&&S.flags.shanMet&&S.flags.lingC&&S.flags.lingD&&S.ev.includes('frost')&&S.ev.includes('forms')&&S.ev.includes('shoe')&&(S.ev.includes('stream')||S.ev.includes('tech')));
+const canAccuse=()=>!!(S.flags.linFixed&&S.ev.includes('oldphoto')&&S.ev.includes('linFix')&&S.flags.anDone&&S.flags.cdDone&&S.flags.shanMet&&S.flags.lingC&&S.flags.lingD&&S.ev.includes('frost')&&S.ev.includes('forms')&&S.ev.includes('shoe')&&(S.ev.includes('stream')||S.ev.includes('tech')));
 function todoText(){const m=[];
  if(!S.flags.shanMet)m.push('跟小珊聊聊');
  if(!S.flags.anDone)m.push('周予安的證詞（先去會長辦公室看看）');
@@ -7,6 +7,8 @@ function todoText(){const m=[];
  if(!S.ev.includes('forms'))m.push('會長辦公室的廢紙簍');
  if(!S.flags.lingMet)m.push('跟莊美玲聊聊');
  else{if(!S.flags.lingC)m.push('問莊美玲都更的事');if(!S.flags.lingD)m.push(S.ev.includes('sauce')?'問莊美玲攤位地下室的事':'先問小珊關於陳大海攤位的事')}
+ if(!S.ev.includes('yunling'))m.push('會長辦公室的抽屜');else if(!S.ev.includes('oldphoto'))m.push('會長辦公室牆上的合照（看過雲嶺明細再看）');
+ if(S.flags.linWrong&&!S.flags.linFixed)m.push('林嬸那邊，還有話沒說完');else if(!S.flags.linWrong)m.push('還有幾條線索沒收齊：後巷的箱子、蔡老闆、會長的書桌');
  if(S.flags.cdDone&&!S.ev.includes('stream')&&!S.ev.includes('tech'))m.push('停電時她在哪（直播或燈光師）');
  return m}
 const fmtMS=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
@@ -14,9 +16,9 @@ function cdModal(secs,left,O,used){setPor(null);hideBox();return new Promise(res
  O.forEach(([k,t])=>{const d=document.createElement('div');d.className='ev pz'+(used.has(k)?' used':'');d.dataset.v=k;d.textContent=(used.has(k)?'✔ ':'')+t;if(!used.has(k))onTap(d,()=>{SFX.tick();m.style.display='none';L.style.gridTemplateColumns='';res(k)});L.appendChild(d)})})}
 async function countdown(){
  setBGM('cd');SFX.blackout();
- await chapter('第二章<br>停電三分鐘');
+ await chapter('停電三分鐘');
  setBg('stage','brightness(.4)');
- await N('21:40。夜市的燈，一盞接一盞熄滅。');
+ await N('回到 21:40。夜市的燈，一盞接一盞熄滅。');
  await N('三分鐘後燈亮了。可是這三分鐘裡發生的事，只有「當時在附近的人」才記得清楚——而且人的記憶，過一會兒就會變糊。');
  await say('an','警察現在只顧著找陳大海，沒人問過這些人。我只能帶妳去問 4 個人，選對人，別浪費時間。','normal');
  const O=[['kai','🎚️ 舞台｜燈光師阿凱'],['ray','📱 舞台前｜直播主小宇'],['li','🔦 後巷｜保全老李'],['cai','🍗 炸雞排攤｜蔡老闆'],['tea','🧋 夜市口｜手搖飲店員'],['dj','🎧 舞台側｜DJ 阿龍']];
@@ -38,11 +40,11 @@ async function countdown(){
  await say('an','停電那三分鐘，有人不在她「應該在」的地方。……剩下的，就看妳能不能讓她自己說出來了。','normal');
 }
 /* ---------- talks ---------- */
-async function talk(p){
+async function talk2(p){
  if(p==='shan'){
   if(!S.flags.shanMet){S.flags.shanMet=1;
-   await say('shan','許偵探……謝謝妳願意相信我爸。','normal');
-   await say('shan','我爸陳大海，在這裡賣了二十年滷味。他脾氣很直，也真的跟會長吵過架……可是他連殺雞都不敢看。','nervous');
+   await say('shan','許姐姐……謝謝妳願意接。','normal');
+   await say('shan','我爸脾氣很直，也真的跟會長吵過架……可是他連殺雞都不敢看。','nervous');
    await say('shan','七點五十，我爸去自治會辦公室，隔壁攤的人聽到他在吼：「你把大家賣了！」出來以後，他就再也沒回攤位了。','nervous');
    await say('me','「你把大家賣了」——他在說什麼？');
    await say('shan','我不知道。可是我爸最近一直在翻攤位的登記文件，臉色很難看……','nervous');
@@ -75,7 +77,7 @@ async function talk(p){
   return}
  if(p==='ling'){
   if(!S.flags.lingMet){S.flags.lingMet=1;
-   await say('ling','妳就是小珊找來的偵探吧？我是自治會幹事，莊美玲。會長的事……我到現在還不敢相信。','normal');
+   await say('ling','許小姐……傍晚才跟妳聊過，晚上就出這種事。會長的事，我到現在還不敢相信。','nervous');
    await say('me','請節哀。聽說，會長最信任的人就是妳。');
    await say('ling','我跟了他十二年，每一件事他都交給我辦……','nervous');
    await say('me','莊幹事，停電那三分鐘，妳人在哪裡？');
@@ -97,7 +99,7 @@ async function talk(p){
   return}
  if(p==='li'){
   if(!S.flags.liMet){S.flags.liMet=1;
-   await say('li','許偵探？小珊跟我說過了。唉……陳大海那個人，我認識二十年，他不是那種人。','normal');
+   await say('li','許偵探。唉……陳大海那個人，我認識二十年，他不是那種人。','normal');
    await say('li','貨櫃，我只能讓妳看，不能碰。我剪開鎖的時候，會長已經冰得硬邦邦的了……','nervous');return}
   if(S.flags.cdDone){await say('li','該說的我都說了。找到大海，拜託了。','normal');return}
   await say('li','現在巷子裡人太多，等有空的時候再問我吧。我巡邏的事，我都記得。','normal')}

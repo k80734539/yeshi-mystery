@@ -4,3 +4,25 @@
 #mlist .ev.pz.tl{align-items:flex-start;text-align:left;font-size:14px;line-height:1.4}
 #mlist .ev.pz.tl.used{border-color:#d1361e;opacity:.8;filter:none}
 </style>
+<style id="lkc2">
+#lk{position:absolute;inset:0;z-index:11;display:none;flex-direction:column;padding:12px;padding-top:max(12px,env(safe-area-inset-top));background:#1b1510 repeating-linear-gradient(0deg,transparent 0 27px,rgba(255,235,190,.07) 27px 28px)}
+#lk h2{margin:2px 0 4px;color:#f5d58a;text-align:center;font-size:19px;letter-spacing:2px}
+#lkd{font-size:12.5px;color:#cbbd9c;text-align:center;margin-bottom:8px;line-height:1.4}
+#lkb{position:relative;display:flex;justify-content:space-between;gap:34px;flex:1 1 auto;min-height:0;overflow:auto;align-items:flex-start}
+#lkb>div{display:flex;flex-direction:column;gap:10px;width:46%;position:relative;z-index:2}
+#lks{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
+.lkp{fill:none;stroke:#ff6a4a;stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 3px #f84)}
+.lkp.old{stroke:#8a8a8a;stroke-dasharray:6 6;stroke-width:2;filter:none;opacity:.8}
+.lkn{background:#f1e6c8;color:#2a2218;border:2px solid #8a7550;border-radius:8px;padding:9px 8px;font-size:13.5px;line-height:1.4;text-align:left;font-weight:600;box-shadow:2px 3px 0 rgba(0,0,0,.45);font-family:inherit}
+.lkn.sel{border-color:#d1361e;background:#ffe9a8;transform:translateY(-2px);box-shadow:0 0 0 2px #d1361e,2px 5px 0 rgba(0,0,0,.45)}
+.lkn.lnk{background:#d9efc8;border-color:#4d8b3a}
+#lkc{min-height:72px;max-height:22%;overflow:auto;margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.4);border:1px solid rgba(245,194,107,.35);font-size:13.5px;line-height:1.5;color:#f0e2bd}
+.lkg{margin:2px 0}.lkw{color:#ff9a8a;margin:2px 0}
+#lkx{margin-top:8px;display:flex}#lkx .btn{flex:1;min-height:50px}
+#lkx .btn.rdy{animation:prdy 1.2s infinite}
+#bar.stc{flex-direction:column;align-items:stretch}#bar.stc .btn{flex:none;width:100%;text-align:left;font-size:14.5px;line-height:1.45;padding:10px 12px}
+#bar.stc .btn small{display:block;font-size:12px;opacity:.85;margin-bottom:2px;letter-spacing:1px}
+#bar.hub .btn{padding:8px 4px;font-size:14px;min-width:22%}
+#bar .btn.sym{background:linear-gradient(#d8707f,#8a2a3b)}#bar .btn.firm{background:linear-gradient(#d0452f,#7a1410)}#bar .btn.calm{background:linear-gradient(#3f78b0,#1f3c63)}
+@media (prefers-reduced-motion:reduce){#lkx .btn.rdy{animation:none}}
+</style>

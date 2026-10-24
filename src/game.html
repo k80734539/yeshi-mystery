@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>夜市無聲</title><!-- build:v1-yeshi -->
+<title>夜市無聲</title><!-- build:v2-depth -->
 <style>
 html,body,button,.btn,.hot,#box{touch-action:manipulation}
 #log{position:absolute;inset:0;z-index:12;background:rgba(0,0,0,.9);display:none;flex-direction:column;padding:14px;padding-top:max(14px,env(safe-area-inset-top))}#log h2{color:#f5c26b;text-align:center;margin:4px 0 10px;font-size:20px}#logl{flex:1;overflow:auto;font-size:15px;line-height:1.55;-webkit-overflow-scrolling:touch}#logl p{margin:0 0 10px;white-space:pre-wrap}#logl b{color:#ffd77a}
@@ -167,6 +167,28 @@ html,body{margin:0;height:100%;background:#000;color:#fff;font-family:"PingFang 
 #mlist .ev.pz.tl{align-items:flex-start;text-align:left;font-size:14px;line-height:1.4}
 #mlist .ev.pz.tl.used{border-color:#d1361e;opacity:.8;filter:none}
 </style>
+<style id="lkc2">
+#lk{position:absolute;inset:0;z-index:11;display:none;flex-direction:column;padding:12px;padding-top:max(12px,env(safe-area-inset-top));background:#1b1510 repeating-linear-gradient(0deg,transparent 0 27px,rgba(255,235,190,.07) 27px 28px)}
+#lk h2{margin:2px 0 4px;color:#f5d58a;text-align:center;font-size:19px;letter-spacing:2px}
+#lkd{font-size:12.5px;color:#cbbd9c;text-align:center;margin-bottom:8px;line-height:1.4}
+#lkb{position:relative;display:flex;justify-content:space-between;gap:34px;flex:1 1 auto;min-height:0;overflow:auto;align-items:flex-start}
+#lkb>div{display:flex;flex-direction:column;gap:10px;width:46%;position:relative;z-index:2}
+#lks{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
+.lkp{fill:none;stroke:#ff6a4a;stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 3px #f84)}
+.lkp.old{stroke:#8a8a8a;stroke-dasharray:6 6;stroke-width:2;filter:none;opacity:.8}
+.lkn{background:#f1e6c8;color:#2a2218;border:2px solid #8a7550;border-radius:8px;padding:9px 8px;font-size:13.5px;line-height:1.4;text-align:left;font-weight:600;box-shadow:2px 3px 0 rgba(0,0,0,.45);font-family:inherit}
+.lkn.sel{border-color:#d1361e;background:#ffe9a8;transform:translateY(-2px);box-shadow:0 0 0 2px #d1361e,2px 5px 0 rgba(0,0,0,.45)}
+.lkn.lnk{background:#d9efc8;border-color:#4d8b3a}
+#lkc{min-height:72px;max-height:22%;overflow:auto;margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.4);border:1px solid rgba(245,194,107,.35);font-size:13.5px;line-height:1.5;color:#f0e2bd}
+.lkg{margin:2px 0}.lkw{color:#ff9a8a;margin:2px 0}
+#lkx{margin-top:8px;display:flex}#lkx .btn{flex:1;min-height:50px}
+#lkx .btn.rdy{animation:prdy 1.2s infinite}
+#bar.stc{flex-direction:column;align-items:stretch}#bar.stc .btn{flex:none;width:100%;text-align:left;font-size:14.5px;line-height:1.45;padding:10px 12px}
+#bar.stc .btn small{display:block;font-size:12px;opacity:.85;margin-bottom:2px;letter-spacing:1px}
+#bar.hub .btn{padding:8px 4px;font-size:14px;min-width:22%}
+#bar .btn.sym{background:linear-gradient(#d8707f,#8a2a3b)}#bar .btn.firm{background:linear-gradient(#d0452f,#7a1410)}#bar .btn.calm{background:linear-gradient(#3f78b0,#1f3c63)}
+@media (prefers-reduced-motion:reduce){#lkx .btn.rdy{animation:none}}
+</style>
 </head><body><div id="app">
 <div id="bg"></div><canvas id="fx"></canvas>
 <img id="por" alt="">
@@ -257,17 +279,18 @@ const fxc=$('#fx');function rsize(){if(fxc){fxc.width=fxc.clientWidth;fxc.height
 /* ---------- state ---------- */
 const S={ev:[],flags:{},hearts:5,scene:null,hints:0,miss:0};
 window.__G=S;window.__fast=false;
-const CH={shan:'小珊',an:'周予安',ling:'莊美玲',wang:'王仲義',hai:'陳大海',li:'保全老李',kai:'燈光師阿凱',ray:'直播主小宇',cai:'炸雞排蔡老闆',tea:'手搖飲店員',dj:'DJ 阿龍',me:'我',cop:'警察'};
+const CH={shan:'小珊',an:'周予安',ling:'莊美玲',wang:'王仲義',hai:'陳大海',li:'保全老李',kai:'燈光師阿凱',ray:'直播主小宇',cai:'炸雞排蔡老闆',tea:'手搖飲店員',dj:'DJ 阿龍',me:'我',cop:'警察',lin:'林嬸',wu:'吳阿嬤'};
+const Me=(t,e)=>say('me',t,e||'normal');
 const EV={
  body:{ic:'🧊',n:'法醫的初步報告',d:'王仲義會長的初步驗屍結果：\n・死因：後腦遭鈍器重擊。\n・遺體【還沒有出現屍僵】，法醫因此推估死亡時間在【21:00 以後】。\n（所以停電的那三分鐘，成了最可疑的時間。）'},
  blackout:{ic:'⚡',n:'停電三分鐘',d:'21:40–21:43，夜市全區跳電三分鐘。\n警方的看法：兇手趁黑把會長鎖進後巷的貨櫃，再把鑰匙丟回陳大海的攤位——所以兇手是陳大海。'},
- note:{ic:'✉️',n:'匿名紙條',d:'今晚塞進事務所門縫的紙條，沒有署名，原子筆字跡很工整：\n「福安夜市的案子，別被鑰匙騙了。去看貨櫃鎖上有沒有霜。」\n（這個字跡……我見過。）'},
+ note:{ic:'✉️',n:'匿名紙條',d:'停電那三分鐘，不知道是誰把它塞進了我的外套口袋。沒有署名，原子筆字跡很工整：\n「福安夜市的案子，別被鑰匙騙了。去看貨櫃鎖上有沒有霜。」\n（這個字跡……我見過。）'},
  sauce:{ic:'🫙',n:'紅麴老滷',d:'小珊說：陳大海的獨門秘方——【暗紅色、黏稠的紅麴老滷】，只存放在攤位地下儲藏室的陶甕裡。\n攤位上賣的滷味，用的是【黑褐色的醬油滷】，兩種完全不同。\n（警察翻過兩遍攤位，說只有水泥地。）'},
  notice:{ic:'📢',n:'都更公告',d:'夜市入口看板上的《福安夜市都市更新說明會》公告。\n公告日期是【昨天】——大部分攤商，是昨天才第一次看到這個消息。'},
  key:{ic:'🔑',n:'貨櫃的鑰匙',d:'貨櫃掛鎖的鑰匙，在陳大海的玻璃櫃檯上被找到。\n鐵捲門只拉到一半，鑰匙卻擺得整整齊齊——像是被人從縫隙「放」進來的，而不是慌張間丟下的。'},
  frost:{ic:'❄️',n:'貨櫃鎖上的霜',d:'後巷貨櫃的掛鎖與門環上，結著一層【厚厚的白霜】，邊緣還凝成了小冰珠。\n冷氣從門縫洩出來，要吹上【一個多小時】才會結成這樣。\n如果鎖是停電那三分鐘才扣上，最多只有薄薄一層水氣。'},
  cold:{ic:'🌡️',n:'冷凍機組（-18℃）',d:'貨櫃的冷凍機組整晚運轉，面板顯示 -18℃。\n低溫會讓屍僵與屍斑【延後很久才出現】——遺體在裡面放得越久，法醫越會以為「死得比較晚」。'},
- bottle:{ic:'🧃',n:'空的烏梅湯瓶',d:'後巷紙箱後面，丟著一個空的保特瓶，瓶蓋開著。\n瓶身貼著「大海滷味」的貼紙，瓶口殘留一點【白色粉末】。\n（有人被灌了藥？）'},
+ bottle:{ic:'🧃',n:'空的烏梅湯瓶',d:'後巷紙箱後面，丟著一個空的保特瓶，瓶蓋開著。\n瓶蓋印著【林嬸豆花】四個字——跟今晚美玲遞給我的那一種，一模一樣。\n瓶口殘留一點【白色粉末】。\n（有人被灌了藥？）'},
  trophy:{ic:'🏆',n:'缺角的獎盃架',d:'會長辦公室的獎盃架，少了一座「模範夜市」純銅獎盃，架上留下一個乾淨的方形灰塵印。\n法醫說，致命傷是【方形底座】的鈍器造成的。\n垃圾桶裡還有用過的濕紙巾，帶著酒精味。'},
  yunling:{ic:'☁️',n:'雲嶺的採購名單',d:'檔案櫃抽屜底下壓著一張採購明細，抬頭印著雲朵形狀的【雲嶺開發】標誌。\n福安夜市 31 個攤位的「讓渡價」一筆一筆列得清清楚楚。\n最右邊的【收款人】欄，被人整齊地撕掉了。\n（誰拿走了那一欄？）'},
  forms:{ic:'📄',n:'攤位讓渡書影本',d:'31 份「攤位登記讓渡書」影本。\n出讓人欄是各個攤商的名字，字跡卻一模一樣，像是同一個人代簽。\n「經辦人」欄簽著【莊美玲】，日期是【三個月前】。\n（早在昨天的公告之前，就有人在辦這件事了。）'},
@@ -277,14 +300,19 @@ const EV={
  patrol:{ic:'🔦',n:'老李的巡邏紀錄',d:'保全老李說：\n・21:00 巡到後巷時，貨櫃的掛鎖【已經扣著了】，他拉過，沒有被動過。\n・停電前後，他都守在巷口。'},
  shutter:{ic:'🪟',n:'半拉的鐵捲門',d:'隔壁炸雞排攤蔡老闆說：\n・陳大海的鐵捲門從 19:50 起一直拉到一半，貼著「休息十分鐘」，再也沒動過。\n・停電那三分鐘，攤位裡傳出「叩」的一聲，像鑰匙掉在玻璃櫃上。燈亮後，裡面沒人。'},
  shoe:{ic:'👞',n:'莊美玲的鞋底',d:'莊美玲黑皮鞋鞋底的邊緣，沾著一圈【暗紅色、黏黏的污漬】，聞起來有八角和紅麴的味道。\n（攤位上賣的滷汁，是黑褐色的。）'},
- hatch:{ic:'🕳️',n:'地墊下的活板門',d:'陳大海攤位的地墊下，藏著一扇方形活板門，扣著一把【嶄新的掛鎖】，上面沒有一點灰塵。\n地墊旁有一道很淺的拖痕。敲門，沒有回應。\n（這就是小珊說的地下儲藏室入口。）'}
+ hatch:{ic:'🕳️',n:'地墊下的活板門',d:'陳大海攤位的地墊下，藏著一扇方形活板門，扣著一把【嶄新的掛鎖】，上面沒有一點灰塵。\n地墊旁有一道很淺的拖痕。敲門，沒有回應。\n（這就是小珊說的地下儲藏室入口。）'},
+ draft:{ic:'📝',n:'會長的處理草稿',d:'王仲義書桌上寫到一半的草稿：\n・攤位 12（林嬸豆花）——「屢勸不聽，月底前未簽，改由自治會依規強制處理。」\n・其他各攤，已一一標上「已處理」。\n（會長的字跡。林嬸，是最後一個還沒簽的人。）'},
+ lintest:{ic:'👀',n:'蔡老闆的目擊',d:'炸雞排攤蔡老闆說：\n・20:50，他看見林嬸【提著一大袋空保特瓶】，走進後巷。\n・林嬸膝蓋不好，平常連巷口都不愛走。'},
+ oldphoto:{ic:'🖼️',n:'十週年合照的後排',d:'十週年合照最後一排：年輕的莊美玲，站在一個掛著「莊記菜行」招牌的攤位前，旁邊是一位笑得很驕傲的中年男人。\n招牌角落寫著攤號【07】。\n（雲嶺採購明細的第一筆，就是攤位 07。）'},
+ linFix:{ic:'🧓',n:'林嬸說出口的真相',d:'林嬸終於說了：\n・20:30，莊美玲跟她借了【十二個回收瓶】，說是自治會招待志工的烏梅湯。\n・20:50，美玲又拜託她，把洗乾淨的空瓶【送到後巷口的冰箱】，還說：「這是我自己請客，別跟人說。」\n（所以提著瓶子進後巷的人是林嬸，但瓶子是美玲的。）'},
+ granny:{ic:'👵',n:'吳阿嬤看見的人',d:'戴回老花眼鏡的吳阿嬤說：\n・停電結束後沒多久，有個【穿黃背心、拿手電筒】的女人，從後巷的方向快步走出來，經過她的椅子前。\n・「她的鞋子，踩得很急，鞋底還黏黏的，沾了紅紅的東西。」'}
 };
 /* ---------- dialogue ---------- */
 const box=$('#box'),txt=$('#txt'),nm=$('#name'),por=$('#por');
 let waiter=null,skip=false;
 box.addEventListener('click',()=>{ac();if(typing){skip=true}else if(waiter){const w=waiter;waiter=null;SFX.tap();w()}});
 let typing=false;
-function setPor(c,e='normal',fx){if(!c){por.classList.remove('on');por.dataset.c='';return}const src=ART[c+'_'+e]||ART[c+'_normal'];if(por.dataset.k!==c+e){por.src=src;por.dataset.k=c+e}por.dataset.c=c;por.classList.add('on');if(fx){por.classList.remove('shake');void por.offsetWidth;por.classList.add('shake')}}
+function setPor(c,e='normal',fx){if(!c){por.classList.remove('on');por.dataset.c='';return}const src=ART[c+'_'+e]||ART[c+'_'+({broken:'sad',nervous:'sad',surprised:'sad',angry:'sad',point:'normal'}[e])]||ART[c+'_normal'];if(por.dataset.k!==c+e){por.src=src;por.dataset.k=c+e}por.dataset.c=c;por.classList.add('on');if(fx){por.classList.remove('shake');void por.offsetWidth;por.classList.add('shake')}}
 const LOG=[];function onTap(el,fn){let tt=0;el.addEventListener('touchend',ev=>{ev.preventDefault();tt=Date.now();fn(ev)},{passive:false});el.addEventListener('click',ev=>{if(Date.now()-tt<700)return;fn(ev)})}
 async function say(who,t,e,opt={}){
  if(!opt.test){LOG.push([who?(CH[who]||who):'',t]);if(LOG.length>60)LOG.shift()}
@@ -382,7 +410,7 @@ async function cx0(who,title,r){
   if(v==='next'){i++;if(i>=r.lines.length){i=0;await N('（證詞又繞回第一句了。哪一句跟證物對不上？）')}continue}
   if(v==='press'){(r._p=r._p||{})[i]=1;tban(r,title,i);hideBox();await burst();for(const p of (L.press||[[who,'……就是這樣，沒什麼好說的。']])){const me=p[0]===who;por.classList.toggle('zoom',me);await say(p[0],p[1],p[2]||(me?'nervous':undefined),{press:true})}por.classList.remove('zoom');continue}
   if(v==='present'){busyModal=true;const k=await evModal('要出示哪一個證物？',true);busyModal=false;if(!k)continue;
-   if(i===r.answer.i&&r.answer.ev.includes(k)){await epHit(who,k,L,!!S.flags.final&&/4\/4/.test(title));return k}
+   if(i===r.answer.i&&r.answer.ev.includes(k)){await epHit(who,k,L,!!S.flags.final&&/5\/5/.test(title));return k}
    S.miss++;await epMiss(who,!!S.flags.final);
    await say(who,r.wrongLine||'……你拿這個出來是想說什麼？跟我說的話根本沒有矛盾啊。','normal');
    if(S.flags.final){if(S.hearts<=0)return 'dead';await N(`（判斷失誤，信用剩下 ${S.hearts} 顆心……）`)}
@@ -396,11 +424,16 @@ const T={
    {t:'今晚我連會長辦公室的門都沒碰過。',press:[['me','一次都沒有？連門把都沒摸過？'],['an','沒有！我整晚都在炸雞排攤跟後巷之間跑腿。','nervous'],['me','（他說話的時候，手一直按著外套胸口……）']]},
    {t:'八點到停電，我一直在蔡老闆的炸雞排攤幫忙。',press:[['an','蔡老闆可以作證。'],['me','（他說的是「幫忙」，沒說「一步都沒離開」……）']]}],
    answer:{i:1,ev:['pin']},wrongLine:'……妳拿這個出來，是想說什麼？',hint:['他說「連會長辦公室的門都沒碰過」。有什麼東西，會掉在他去過的地方？','會長辦公室檔案櫃旁撿到的紅色放大鏡徽章——他外套胸口剛好少了一枚。']},
+ L:{title:'林嬸的證詞：今晚',lines:[
+   {t:'我今晚一直守著豆花攤，連後巷長什麼樣子，都沒看過。',press:[['me','一次都沒有去過？'],['lin','沒、沒有。我膝蓋不好，不愛走遠。','nervous'],['me','（她的手，一直絞著圍裙邊……）']]},
+   {t:'瓶子？我的回收瓶借出去好幾個，我哪記得借給誰。',press:[['lin','夜市的人，都愛跟我借。']]},
+   {t:'會長的事，我們這種小攤販，哪有資格說話。',press:[['lin','他要我們簽，我們就簽……']]}],
+   answer:{i:0,ev:['lintest']},wrongLine:'……這跟我說的，有什麼關係？',hint:['她說自己「連後巷長什麼樣子都沒看過」。有沒有誰，在今晚看見她進去過？','蔡老闆的目擊：20:50，林嬸提著一大袋空瓶，走進後巷。']},
  F1:{title:'莊美玲的反駁 1',lines:[
    {t:'停電的時候，我就站在舞台前面，一步都沒離開過。',press:[['me','整整三分鐘，都在舞台前面？'],['ling','對。燈一黑，我還在原地喊大家不要慌。','nervous'],['me','（很流暢，像背好的……）']]},
    {t:'我只是自治會的幹事，會長交代什麼，我就做什麼。',press:[['ling','我跟了他十二年，他最信任我。']]},
    {t:'我實在不敢相信，會長竟然被人鎖在冷凍貨櫃裡……',press:[['ling','太殘忍了……']]}],
-   answer:{i:0,ev:['stream','tech']},wrongLine:'……那跟我說的有什麼矛盾？我就是站在那裡啊。',hint:['她說停電時「一步都沒離開」舞台前面。停電前後，舞台前面有誰、沒有誰？','小宇的直播回放：補光燈掃過前排，沒有半件黃背心。燈光師阿凱也說她 21:32 往後巷走了。']},
+   answer:{i:0,ev:['stream','tech','granny']},wrongLine:'……那跟我說的有什麼矛盾？我就是站在那裡啊。',hint:['她說停電時「一步都沒離開」舞台前面。停電前後，舞台前面有誰、沒有誰？','小宇的直播回放：補光燈掃過前排，沒有半件黃背心。燈光師阿凱也說她 21:32 往後巷走了。']},
  F2:{title:'莊美玲的反駁 2',lines:[
    {t:'一定是停電那三分鐘，才有人把會長鎖進貨櫃的——誰有鑰匙，誰就是兇手。',press:[['me','鎖是停電那三分鐘才扣上的？'],['ling','不然呢？鑰匙都在陳大海的攤位上了。','nervous']]},
    {t:'鑰匙就擺在陳大海的櫃檯上，這不是很清楚嗎？',press:[['ling','警察都看到了。']]},
@@ -411,7 +444,12 @@ const T={
    {t:'會長是個很有主見的人，他決定的事，沒有人能改。',press:[['ling','他連我的意見，都不太聽。']]},
    {t:'陳大海那天為了攤位的事，跟會長吵得非常兇，大家都聽到了。',press:[['ling','他恨會長，這是人人都知道的。']]}],
    answer:{i:0,ev:['forms']},wrongLine:'……這跟我說的有什麼關係？',hint:['她說「昨天」才聽說。有沒有更早、而且跟她有關的紙本紀錄？','辦公室廢紙簍裡的讓渡書影本，「經辦人」簽著莊美玲，日期是三個月前。']},
- F4:{title:'莊美玲的最後反駁',lines:[
+ F4:{title:'莊美玲的反駁 4',lines:[
+   {t:'自治會預算那麼少，我連招待志工喝杯茶，都要自己掏錢。',press:[['me','所以，沒有請過人喝飲料？'],['ling','哪有那個預算。','nervous']]},
+   {t:'今晚我根本沒碰過什麼瓶裝飲料，更沒有給誰喝過烏梅湯。',press:[['me','一瓶也沒有？'],['ling','一瓶也沒有。我今天連水都沒空喝。','nervous'],['me','（她的手，下意識地按住了黃背心的口袋……）']]},
+   {t:'陳大海是自己跑掉的，誰知道他今天吃了什麼、喝了什麼。',press:[['ling','他心虛，才會不見的。']]}],
+   answer:{i:1,ev:['linFix']},wrongLine:'……這跟我說的有什麼矛盾？',hint:['她說自己「沒給誰喝過烏梅湯」。可是傍晚，她是怎麼對妳說的？而那些瓶子，又是誰借給她的？','林嬸說出口的真相：美玲借了十二個瓶子，還叫她「別跟人說」。']},
+ F5:{title:'莊美玲的最後反駁',lines:[
    {t:'我連陳大海的攤位底下有地下室都不知道，我怎麼可能下去過？',press:[['me','妳說，妳不知道他的攤位底下有地下室？'],['ling','我連他的攤位都沒進去過！','nervous']]},
    {t:'要懷疑，也該懷疑陳大海——他是唯一跑掉的人。',press:[['ling','心虛的人才會跑。']]},
    {t:'警察遲早會把他抓回來，到時候一切都清楚了。',press:[['ling','我只是在等真相。']]}],
@@ -420,49 +458,361 @@ const T={
 /* ---------- scenes ---------- */
 const SC={
  market:{name:'福安夜市',bg:'market',hots:[
-  {id:'notice',x:17,y:20,w:14,h:12,l:'公告看板',f:async()=>{await N('夜市入口的看板上，貼著一張大紅公告：《福安夜市　都市更新說明會》。');await N('底下的日期，是【昨天】。');await N('攤商們三三兩兩圍在看板前，臉色都很難看。有人小聲說：「這種事，怎麼昨天才說……」');await getEv('notice')}},
-  {id:'stagedoor',x:34,y:44,w:32,h:8,l:'往舞台',f:()=>go('stage')},
-  {id:'stalldoor',x:1,y:55,w:30,h:20,l:'陳大海的滷味攤',f:()=>go('stall')},
-  {id:'alleydoor',x:68,y:55,w:31,h:20,l:'往後巷',f:()=>go('alley')},
-  {id:'officedoor',x:79,y:10,w:19,h:23,l:'自治會辦公室',f:()=>go('office')}],
-  people:['shan','an','ling']},
+  {id:'notice',x:17,y:20,w:14,h:12,l:'公告看板',f:a1notice},
+  {id:'bench',x:34,y:70,w:32,h:10,l:'路邊的長椅',show:()=>!S.flags.act2,f:a1bench},
+  {id:'stagedoor',show:()=>!!S.flags.act2,x:34,y:44,w:32,h:8,l:'往舞台',f:()=>go('stage')},
+  {id:'stalldoor',show:()=>!!S.flags.act2,x:1,y:55,w:30,h:20,l:'陳大海的滷味攤',f:()=>go('stall')},
+  {id:'alleydoor',show:()=>!!S.flags.act2,x:68,y:55,w:31,h:20,l:'往後巷',f:()=>go('alley')},
+  {id:'officedoor',show:()=>!!S.flags.act2,x:79,y:10,w:19,h:23,l:'自治會辦公室',f:()=>go('office')}],
+  people:()=>S.flags.act2?['shan','lin','an','ling','cai','wu']:['shan','lin','hai','ling','an','cai','li','wu'].filter(k=>!(k==='hai'&&S.flags.haiGone))},
  alley:{name:'後巷',bg:'alley',hots:[
   {id:'lock',x:38,y:48,w:20,h:11,l:'貨櫃的掛鎖',f:async()=>{await N('貨櫃的掛鎖被保全剪斷了，斷開的鎖掛在門環上。');if(S.ev.includes('note'))await say('me','（紙條說，去看鎖上有沒有霜……）');await N('我伸手摸了摸——鎖身、門環上，結著一層【厚厚的白霜】，邊緣還凝成了小冰珠。');await N('冷氣從門縫洩出來，要一直吹在冰冷的金屬上，吹上一個多小時才會結成這樣。');await N('如果鎖是停電那三分鐘才扣上的，上面最多只有一層薄薄的水氣。');await getEv('frost')}},
   {id:'vent',x:46,y:26,w:32,h:9,l:'冷凍機組',f:async()=>{await N('貨櫃頂上的冷凍機組轟轟地運轉著，面板顯示：-18℃。');await N('遺體關在這種溫度裡，屍僵會比平常慢很多才出現……');await getEv('cold')}},
-  {id:'crates',x:1,y:58,w:30,h:22,l:'紙箱堆',f:async()=>{await N('牆邊的紙箱堆後面，滾著一個空的保特瓶，瓶蓋是開著的。');await N('瓶身貼著「大海滷味」的貼紙，瓶口殘留一點白色粉末。');await N('有人，被灌了藥……？');await getEv('bottle')}},],
-  people:['li']},
+  {id:'crates',x:1,y:58,w:30,h:22,l:'紙箱堆',f:async()=>{await N('牆邊的紙箱堆後面，滾著一個空的保特瓶，瓶蓋是開著的。');await N('瓶蓋上印著「林嬸豆花」四個字——跟傍晚美玲遞給我的那一種一樣。瓶口殘留一點白色粉末。');await N('有人，被灌了藥……？');await getEv('bottle');await chk()}},
+  {id:'bowl',x:55,y:84,w:30,h:8,l:'巷口的塑膠碗',f:async()=>{await N('貨櫃旁的地上，擺著一個舊塑膠碗，裡面還有一點沒吃完的雞骨頭。');await N('碗邊，有幾撮灰黃色的短毛。');if(S.flags.liMet){await say('li','（從轉角探出頭）……被妳發現了。','nervous');await say('li','會長規定不准餵流浪狗。可是這隻老黃，在這條巷子住了八年，我巡邏的時候，不可能看牠餓肚子。','nervous');await say('li','不要跟會長說……啊，他也不在了。唉。','normal');await Me('不會有人說的。牠叫老黃？','normal');S.flags.liDog=1;await N('巷子深處，有一雙發亮的眼睛，探頭看了我一下，又縮回去了。')}else await N('（這是誰擺的？也許，可以問問巡邏的保全。）')}},],
+  people:()=>['li']},
  stage:{name:'舞台',bg:'stage',hots:[
   {id:'console',x:1,y:51,w:40,h:14,l:'燈光控台',f:async()=>{await N('控台旁貼著今晚的流程表：19:30 開幕、20:30 摸彩、21:30 燈光秀、21:45 會長致詞。');await N('「會長致詞」那一欄，被人用紅筆打了個大叉，旁邊寫著：「會長未到——改播影片」。')}},
   {id:'screen',x:25,y:36,w:36,h:13,l:'舞台螢幕',f:async()=>{await N('螢幕上循環播放著「福安夜市四十週年」的宣傳影片。');await N('影片裡，王仲義會長站在夜市入口，笑得很燦爛。')}},
   {id:'power',x:74,y:50,w:24,h:12,l:'配電箱',f:async()=>{await N('配電箱的跳電開關被拉下，標籤上寫著：21:40。');await N('電工說，是有人同時開了太多電鍋跟直播補光燈，過載跳電。——跟人為破壞無關。')}},],
-  people:[]},
+  people:()=>[]},
  stall:{name:'陳大海的滷味攤',bg:'stall',hots:[
   {id:'counter',x:34,y:55,w:30,h:11,l:'玻璃櫃檯',f:async()=>{await N('玻璃櫃檯正中間，原本擺著貨櫃掛鎖的鑰匙。警察已經拍照、收走了。');await N('鐵捲門只拉到一半，櫃檯上卻沒有一點灰，也沒有急忙丟下東西的痕跡。');await N('那支鑰匙，是被擺得整整齊齊的。');await getEv('key')}},
   {id:'sign',x:42,y:26,w:34,h:8,l:'休息十分鐘的牌子',f:async()=>{await N('半拉的鐵捲門上，掛著一塊牌子：「休息十分鐘」。字跡是陳大海的，墨跡很新。');await N('一個打算逃走的人，會特地寫「休息十分鐘」嗎？');await say('shan','我爸的習慣……不管多急，離開攤位都會掛牌子。','nervous')}},
   {id:'pot',x:68,y:53,w:24,h:11,l:'滷鍋',f:async()=>{await N('鍋裡的滷汁是黑褐色的，醬油味很重，滷蛋已經涼了。');if(S.ev.includes('shoe'))await N('（跟莊美玲鞋底那圈暗紅色，是兩種完全不同的滷汁。）');else await N('……這是攤位上賣的醬油滷。小珊說的那種紅麴老滷，不在這裡。')}},
   {id:'mat',x:8,y:73,w:56,h:13,l:'歪掉的地墊',f:async()=>{await N('地墊有一角歪了，下面壓著一道很淺的長形拖痕。');await N('旁邊的大冰櫃，剛好擋住地墊的一半。——難怪警察搜了兩遍，沒人想到要把這塊墊子翻開。');await N('我掀開地墊。水泥地上，有一塊方形的活板門，扣著一把嶄新的掛鎖。');await N('鎖上一點灰都沒有。我敲了敲板門——沒有回應，下面很安靜。');if(S.flags.shanMet)await say('shan','那、那就是……地下室的入口！爸！爸你在裡面嗎？！','broken');await say('me','現在硬剪開，警察只會當成破壞現場，也沒有人會相信「陳大海被關在裡面」。');await say('me','先找出真正把他鎖進去的人——鑰匙，一定在那個人身上。');await getEv('hatch')}},],
-  people:['shan']},
+  people:()=>['shan']},
  office:{name:'自治會辦公室',bg:'office',hots:[
   {id:'trophy',x:3,y:8,w:52,h:22,l:'獎盃架',f:async()=>{await N('獎盃整整齊齊排在架上，只有最左邊少了一座——那一格留下一個乾淨的方形灰塵印。');await N('垃圾桶裡有一條用過的濕紙巾，聞起來有酒精味。');await N('缺的那座，是「模範夜市」純銅獎盃。法醫說，致命傷來自方形底座的鈍器。');await getEv('trophy')}},
-  {id:'photo',x:21,y:31,w:27,h:13,l:'牆上的合照',f:async()=>{await N('牆上掛著夜市十週年的大合照，中間笑得最開心的，就是王仲義會長。');await say('wang','（錄音）福安夜市，是大家的。我王仲義只要還坐在這個位子上一天，就絕對不會讓它被拆。','normal');await N(S.ev.includes('yunling')?'……講得真好聽。抽屜裡那張名單，可不是這麼寫的。':'……講得真好聽。')}},
+  {id:'photo',x:21,y:31,w:27,h:13,l:'牆上的合照',f:async()=>{await N('牆上掛著夜市十週年的大合照，中間笑得最開心的，就是王仲義會長。');await say('wang','（錄音）福安夜市，是大家的。我王仲義只要還坐在這個位子上一天，就絕對不會讓它被拆。','normal');await N(S.ev.includes('yunling')?'……講得真好聽。抽屜裡那張名單，可不是這麼寫的。':'……講得真好聽。');if(S.ev.includes('yunling')){await N('我把臉湊近玻璃。最後一排，有個年輕女孩，站在一個掛著「莊記菜行」的攤位前，旁邊是笑得很驕傲的中年男人。');await N('招牌的右下角寫著：【07】。');await Me('……攤位 07。雲嶺採購明細的第一筆。','surprised');await getEv('oldphoto');await N('（莊記菜行……莊。她跟莊美玲，是什麼關係？）')}else await N('（最後一排，還有一些模糊的人影。也許等看過別的資料，再回來看。）')}},
+  {id:'desk',x:26,y:56,w:48,h:11,l:'會長的書桌',f:async()=>{await N('書桌上的檯燈還亮著。桌墊底下，壓著一份寫到一半的草稿。');await showDoc('攤位處理進度（草稿）\n\n攤位 07　已處理\n攤位 09　已處理\n……\n攤位 12　林嬸豆花\n　　屢勸不聽，月底前未簽，\n　　改由自治會依規強制處理。\n\n其餘各攤，已處理。');await N('林嬸，是整座夜市，最後一個還沒簽的人。');await getEv('draft');await chk()}},
   {id:'drawer',x:73,y:51,w:25,h:13,l:'被撬開的抽屜',f:async()=>{await N('檔案櫃的抽屜被撬開過，裡面的東西幾乎被拿光了，只剩一張紙被壓在最底下。');await showDoc('雲嶺開發股份有限公司\n福安夜市　攤位讓渡　採購明細\n\n攤位 07　　NT$ 1,800,000\n攤位 12　　NT$ 2,300,000\n攤位 15　　NT$ 1,500,000\n（共 31 筆）\n\n收款人：【此欄已被撕掉】');await say('me','這朵雲……老街那件案子裡，我也看過。','normal');await N('最右邊的「收款人」欄，被人整整齊齊地撕掉了。');await getEv('yunling');try{localStorage.setItem('yeshi_cloud','1')}catch(e){}}},
   {id:'forms',x:1,y:72,w:28,h:17,l:'影印機旁的廢紙簍',f:async()=>{await N('影印機旁的廢紙簍裡，塞著一疊印壞了邊的紙——是「攤位登記讓渡書」的影本。');await N('出讓人欄是不同攤商的名字，字跡卻一模一樣。');await N('每一張的「經辦人」欄，都簽著同一個名字：【莊美玲】。日期，是【三個月前】。');await getEv('forms')}},
-  {id:'pin',x:52,y:79,w:22,h:9,l:'地上的小東西',f:async()=>{await N('檔案櫃旁的地板上，躺著一枚小小的徽章。紅色的放大鏡圖案——');await N('這個圖案，我剛才在誰的外套胸口看過？');await getEv('pin')}},],
-  people:[]}
+  {id:'pin',show:()=>true,x:52,y:79,w:22,h:9,l:'地上的小東西',f:async()=>{await N('檔案櫃旁的地板上，躺著一枚小小的徽章。紅色的放大鏡圖案——');await N('這個圖案，我剛才在誰的外套胸口看過？');await getEv('pin')}},],
+  people:()=>[]}
 };
 let curHots=null;
-function renderScene(){setBGM('inv');const sc=SC[S.scene];$('#place').textContent='📍 '+sc.name;const H=$('#hs');H.innerHTML='';
- sc.hots.forEach(h=>{const d=document.createElement('div');d.className='hot'+(S.flags['h_'+h.id]?' done':'');d.dataset.id=h.id;Object.assign(d.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});d.innerHTML=`<span>${h.l}</span>`;d.onclick=()=>act(async()=>{S.flags['h_'+h.id]=1;await h.f()});H.appendChild(d)});
- const b=$('#bar');b.innerHTML='';b.style.display='flex';
- sc.people.forEach(p=>{const x=document.createElement('button');x.className='btn';x.dataset.talk=p;x.textContent='💬 '+CH[p];x.onclick=()=>act(()=>talk(p));b.appendChild(x)});
- if(S.scene!=='market'){const x=document.createElement('button');x.className='btn';x.dataset.back='1';x.id='backBtn';x.textContent='↩ 回夜市';x.onclick=()=>act(()=>go('market'));b.appendChild(x)}
+/* ---------- notebook link screen (許晴 draws lines between statements and evidence) ---------- */
+(()=>{const lk=document.createElement('div');lk.id='lk';lk.innerHTML='<h2 id="lkt"></h2><div id="lkd"></div><div id="lkb"><svg id="lks"></svg><div id="lkL"></div><div id="lkR"></div></div><div id="lkc"></div><div id="lkx"></div>';document.getElementById('app').appendChild(lk)})();
+function linkScreen(spec){setPor(null);hideBox();$('#bar').style.display='none';window.__lk=spec;
+ return new Promise(res=>{
+  const lk=$('#lk'),svg=$('#lks'),Lc=$('#lkL'),Rc=$('#lkR'),cap=$('#lkc'),X=$('#lkx');
+  $('#lkt').textContent='📒 '+spec.title;$('#lkd').textContent=spec.desc||'點一張左邊的卡片，再點右邊相關的卡片，把線連起來。';
+  Lc.innerHTML='';Rc.innerHTML='';cap.innerHTML='';X.innerHTML='';svg.innerHTML='';lk.style.display='flex';
+  const done=new Set();let sel=null;const el={};
+  const mk=(side,[id,t],box)=>{const b=document.createElement('button');b.type='button';b.className='lkn '+side;b.dataset.id=id;b.dataset.side=side;b.textContent=t;box.appendChild(b);el[id]=b;
+   onTap(b,()=>tap(side,id));return b};
+  spec.L.forEach(n=>mk('l',n,Lc));spec.R.forEach(n=>mk('r',n,Rc));
+  const ok=document.createElement('button');ok.type='button';ok.id='lkok';ok.className='btn red';ok.textContent=spec.okText||'✔ 看清楚了';ok.style.display='none';X.appendChild(ok);
+  const pt=(id,side)=>{const b=el[id].getBoundingClientRect(),w=$('#lkb').getBoundingClientRect();return [(side==='l'?b.right:b.left)-w.left,b.top+b.height/2-w.top]};
+  function line(a,b,cls){const [x1,y1]=pt(a,'l'),[x2,y2]=pt(b,'r');const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',`M${x1},${y1} C${x1+40},${y1} ${x2-40},${y2} ${x2},${y2}`);p.setAttribute('class','lkp '+(cls||''));svg.appendChild(p);
+   if(!cls&&!RM.matches&&!window.__fast){const L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L;void p.getBoundingClientRect();p.style.transition='stroke-dashoffset .6s ease-out';p.style.strokeDashoffset=0}return p}
+  function draw(){svg.innerHTML='';(spec.old||[]).forEach(([a,b])=>{line(a,b,'old')});spec.E.forEach(([a,b])=>{if(done.has(a+'|'+b))line(a,b)})}
+  function tap(side,id){SFX.tap();
+   if(sel&&sel.side===side){el[sel.id].classList.remove('sel');sel=null}
+   if(!sel){sel={side,id};el[id].classList.add('sel');return}
+   const l=side==='l'?id:sel.id,r=side==='r'?id:sel.id;el[sel.id].classList.remove('sel');sel=null;
+   const e=spec.E.find(x=>x[0]===l&&x[1]===r);
+   if(!e){cap.dataset.n=(+cap.dataset.n||0)+1;const w=document.createElement('div');w.className='lkw';w.textContent='（這兩件事，連不起來。）';cap.appendChild(w);setTimeout(()=>w.remove(),1400);SFX.buzz&&0;return}
+   if(done.has(l+'|'+r))return;done.add(l+'|'+r);el[l].classList.add('lnk');el[r].classList.add('lnk');SFX.get();draw();
+   const c=document.createElement('div');c.className='lkg';c.textContent='✎ '+e[2];cap.appendChild(c);cap.scrollTop=cap.scrollHeight;
+   if(done.size>=spec.E.length){ok.style.display='';ok.classList.add('rdy')}}
+  ok.onclick=()=>{SFX.tap();lk.style.display='none';res(true)};
+  requestAnimationFrame(()=>requestAnimationFrame(draw));
+ })}
+function renderScene(){setBGM('inv');const sc=SC[S.scene];$('#place').textContent='📍 '+sc.name+(S.flags.act2?'':'　18:30');const H=$('#hs');H.innerHTML='';
+ sc.hots.forEach(h=>{if(h.show&&!h.show())return;const d=document.createElement('div');d.className='hot'+(S.flags['h_'+h.id]?' done':'');d.dataset.id=h.id;Object.assign(d.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});d.innerHTML=`<span>${h.l}</span>`;d.onclick=()=>act(async()=>{S.flags['h_'+h.id]=1;await h.f()});H.appendChild(d)});
+ const b=$('#bar');b.innerHTML='';b.className='hub';b.style.display='flex';b.style.bottom='';
+ const pp=typeof sc.people==='function'?sc.people():sc.people;
+ pp.forEach(p=>{const x=document.createElement('button');x.className='btn';x.dataset.talk=p;x.textContent='💬 '+CH[p];x.onclick=()=>act(()=>talk(p));b.appendChild(x)});
+ if(!S.flags.act2&&a1ready()){const x=document.createElement('button');x.className='btn red';x.id='a1Btn';x.textContent='⏱ 21:30 燈光秀開始';x.onclick=()=>act(act1End);b.appendChild(x)}
+ if(S.flags.act2&&S.scene!=='market'){const x=document.createElement('button');x.className='btn';x.dataset.back='1';x.id='backBtn';x.textContent='↩ 回夜市';x.onclick=()=>act(()=>go('market'));b.appendChild(x)}
  if(canAccuse()){const x=document.createElement('button');x.className='btn red';x.id='accuseBtn';x.textContent='⚖️ 指認兇手';x.onclick=()=>act(accuse);b.appendChild(x)}
  setPor(null);hideBox();
 }
 let busy=false;
 async function act(fn){if(busy)return;ac();busy=true;$('#hs').style.visibility='hidden';$('#bar').style.display='none';try{await fn()}finally{busy=false;$('#hs').style.visibility='';if(!S.ended)renderScene()}}
-async function go(k){S.scene=k;setBg(SC[k].bg);SFX.tap()}
-const canAccuse=()=>!!(S.flags.anDone&&S.flags.cdDone&&S.flags.shanMet&&S.flags.lingC&&S.flags.lingD&&S.ev.includes('frost')&&S.ev.includes('forms')&&S.ev.includes('shoe')&&(S.ev.includes('stream')||S.ev.includes('tech')));
+async function go(k){S.scene=k;setBg(SC[k].bg);SFX.tap();$('#place').textContent='📍 '+SC[k].name+(S.flags.act2?'':'　18:30')}
+/* ---------- stance (同情 / 強硬 / 冷靜) ---------- */
+const STL={sym:'💗 同情',firm:'🔥 強硬',calm:'❄️ 冷靜'},STX={sym:'sad',firm:'angry',calm:'normal'};
+async function stance(prompt,o){
+ await say('',prompt,null,{noWait:true});
+ const b=$('#bar');b.innerHTML='';b.className='stc';b.style.display='flex';b.style.bottom=(box.offsetHeight+14)+'px';
+ const v=await new Promise(res=>{['sym','firm','calm'].forEach(k=>{if(!o[k])return;const x=document.createElement('button');x.type='button';x.className='btn '+k;x.dataset.v=k;x.innerHTML='<small>'+STL[k]+'</small>';x.appendChild(document.createTextNode('「'+o[k]+'」'));onTap(x,()=>{ac();SFX.tap();b.style.display='none';res(k)});b.appendChild(x)})});
+ b.className='';b.style.bottom='';
+ S.flags['st_'+v]=(S.flags['st_'+v]||0)+1;
+ await say('me','「'+o[v]+'」',STX[v]);return v}
+const scarf=t=>N(t||'（我下意識摸了摸圍巾的流蘇。）');
+function domStance(){const a=S.flags.st_sym||0,b=S.flags.st_firm||0,c=S.flags.st_calm||0;return b>a&&b>=c?'firm':a>=c&&a>b?'sym':c>=a&&c>=b&&(c>a||c>b)?'calm':(a>=b?'sym':'firm')}
+const SECN=()=>['shanArt','linHusb','liDog','anMom','lingFather'].filter(k=>(S.flags[k]||0)>=(k==='shanArt'||k==='linHusb'||k==='liDog'?2:1)).length;
+const A1REQ=['a_shan','a_lin','a_hai','a_ling','a_an'];
+const a1ready=()=>A1REQ.every(k=>S.flags[k]);
+/* ---------- Act 1 : 福安的傍晚 ---------- */
+const A1={
+ async shan(){
+  S.flags.a_shan=1;
+  await say('shan','啊——歡迎光臨！要什麼？……咦，姐姐是第一次來嗎？','normal');
+  await Me('來過很多次。只是今天，我想換一家。');
+  await say('shan','那一定要吃我爸的滷味！陳大海滷味，開了二十年，附贈一個很會講話的女兒。','normal');
+  await N('攤位後面，一個繫著圍裙的中年男人頭也不抬，鍋鏟敲在鍋緣上：「少講話，多裝袋。」');
+  await say('shan','（吐舌頭）那是我爸，陳大海。嘴巴很壞，心很軟。','normal');
+  await Me('今天四十週年，生意應該很好吧？');
+  await say('shan','客人是多啦……可是大家都怪怪的。姐姐妳看那張公告——','nervous');
+  await say('shan','都市更新說明會。昨天才貼出來，說今晚要大家去聽。我爸看了一下午沒講話，我問他，他只說：「小孩子別管。」','nervous');
+  await say('shan','我已經二十歲了耶……','nervous');
+  await N('櫃檯上疊著一疊收據，背面用原子筆畫著夜市的小插畫——燈籠、推車、一個戴帽子的老爺爺。線條又快又準。她注意到我在看，手忙腳亂地把收據翻回正面。');
+  const v=await stance('這些畫……是她畫的。要怎麼說？',{sym:'畫得真好。這不像隨手畫的，是花了很多時間的。',firm:'這種畫，不該塞在收據背面。拿給妳爸看啊。',calm:'線條很穩。學過畫畫？'});
+  if(v==='sym'){S.flags.shanArt=2;
+   await say('shan','……嗯。我上個月拿到美術系的錄取通知。','nervous');
+   await say('shan','可是我爸一個人顧不了攤位，我就跟學校申請了保留入學。他不知道。他以為，我是自己想留下來幫忙的。','nervous');
+   await say('shan','拜託，別跟我爸說。他知道了，一定會逼我去讀。可是，這裡……這裡也是我的家啊。','broken');
+   await Me('我不會說。','sad');
+   await scarf('我下意識摸了摸圍巾。有些人，把最想要的東西藏在背面。')}
+  else if(v==='calm'){S.flags.shanArt=1;
+   await say('shan','……以前補習班學過一點。沒什麼啦，打發時間而已。','nervous');
+   await N('她說得很輕，可是她把那疊收據，壓在最底下。')}
+  else{S.flags.shanArt=0;
+   await say('shan','不要！！','broken',{shake:true});
+   await say('shan','……對不起，我不是故意大聲。這個，不用妳管。','nervous');
+   await N('她把那疊收據抱在胸前，後來整整一分鐘，都沒有再看我一眼。');
+   await Me('（我又太急了……）','sad')}
+  await say('shan','總之，姐姐今天好好逛！那邊的林嬸豆花超好吃，吃完記得回來付錢——哦不對，先付錢！','normal');
+  await N('（可以去找林嬸、陳大海、莊美玲、雞排攤的年輕人聊聊。她們都在這條街上。）');
+ },
+ async lin(){
+  S.flags.a_lin=1;
+  await N('豆花攤前掛著一盞小小的黃燈籠。三張矮桌，一個老婦人正把豆花舀進碗裡，動作又慢又穩。');
+  await say('lin','來啦來啦，坐。糖水自己加，不夠說。','normal');
+  await Me('一碗豆花，只要糖水。');
+  await say('lin','不加配料？……跟我家那口子一樣。他說，配料是在欺負豆花。','normal');
+  await N('第一口，甜得剛剛好，像有人輕輕握住舌尖。我低下頭，把圍巾往上拉了一點。');
+  await Me('……很好吃。跟小時候的味道，一樣。','sad');
+  await say('lin','這個攤子，我先生賣了三十年。他走了以後，換我。','normal');
+  await N('她從圍裙口袋，抽出一張摺了又摺的紙，遞過來。');
+  await say('lin','妳是讀書人，幫我看看這個……我老花，字太小。','nervous');
+  await N('紙上印著一朵雲，標題是「攤位預約讓渡意向書」。預約金，二十萬元。簽名即生效。');
+  await say('lin','昨天來了個穿西裝的年輕人，說夜市要整修，我這種老攤位，不如趁現在拿筆錢，回家享清福。','normal');
+  await say('lin','可是……這個攤子，是我先生留下來的。我又想，我的膝蓋，晚上站一整夜，也痛得要命……','nervous');
+  await Me('（這張紙，我認得。這朵雲，也認得。）','sad');
+  await N('阿嬤的雜貨店被「收購」的那一年，有個穿西裝的人，也是這樣笑咪咪地說：「為了您好」。');
+  await N('她簽了字。簽字的隔天，把鑰匙放在桌上，看了很久。之後她很少說話，也很少再走出家門。');
+  const v=await stance('林嬸看著我，等一個答案：「妳覺得，我該簽嗎？」',{sym:'不要簽。這個攤子，是妳跟先生一起撐起來的，不是一張紙就換得掉的。',firm:'不能簽！那些人只會騙妳，一簽下去就回不來了！',calm:'先別簽。找個懂合約的人，一條一條看過，再決定。'});
+  if(v==='sym'){S.flags.linHusb=2;
+   await say('lin','……妳這孩子，眼睛都紅了。','nervous');
+   await say('lin','告訴妳一個祕密。妳看那邊——燈下面那張空椅子。','normal');
+   await say('lin','每天收攤以前，我都會多盛一碗，不加配料，擺在那裡，一直擺到收攤。他走了十年，我還是改不掉。','normal');
+   await say('lin','這個攤子要是沒了，那張椅子，也就沒有地方放了。','broken');
+   await N('我沒有說話。只是把那碗豆花，一口一口吃完。')}
+  else if(v==='calm'){S.flags.linHusb=1;
+   await say('lin','……好，好。我再想想。謝謝妳啊，沒有叫我趕快決定。','normal');
+   await N('她把紙摺回去，放進圍裙口袋，拍了兩下，像在安撫什麼。燈下面有一張空椅子，她沒有提。')}
+  else{S.flags.linHusb=0;
+   await say('lin','……妳這孩子，跟他們一樣，都想替我決定。','nervous');
+   await say('lin','我吃的鹽，比妳吃的飯還多。我知道不能簽。可是，不用妳來吼我。','nervous');
+   await Me('（……我又犯了。明明是自己最討厭的事。）','sad')}
+  await N('（林嬸的豆花攤。今晚一直在這裡。）');
+ },
+ async hai(){
+  S.flags.a_hai=1;
+  await N('滷味攤後面，陳大海正低頭翻動滷鍋。四十多歲，手臂上好幾道燙傷的疤，像舊地圖。');
+  await say('hai','小珊說，妳是偵探。我們這種地方，有什麼好查的？','normal');
+  await Me('我是來吃東西的。只是……職業病，看到公告就會想知道，是誰貼的。');
+  await say('hai','（哼了一聲）昨天貼，今天開會。叫我們去「聽」，沒有人問過我們要不要。','normal');
+  await N('他從圍裙口袋掏出一疊影本，啪地擱在玻璃櫃檯上。最上面一張的角落，有他的名字。');
+  await say('hai','這是我攤位的登記影本。我簽過的字，我自己認得——這個，不是我寫的。','nervous');
+  await Me('有人冒簽你的名字？');
+  await say('hai','我不知道！所以我要去問清楚。','nervous');
+  await N('牆上被油煙燻黃的角落，貼著一張小小的插畫：一個小女孩，牽著爸爸，站在夜市口。他發現我在看，哼了一聲，把圍裙解下來。');
+  await say('hai','小珊她知道這個攤位的事，一知半解。她不用知道。我去找王會長，今晚就談清楚。','normal');
+  await say('hai','（對女兒喊）小珊！我離開一下！','normal');
+  await say('shan','爸？你去哪——','nervous');
+  await N('他把鐵捲門拉下一半，掛上一塊「休息十分鐘」的牌子，大步走向自治會辦公室。那是 19:50。');
+  S.flags.haiGone=1;
+ },
+ async ling(){
+  S.flags.a_ling=1;
+  await N('一個穿黃色螢光背心的女人，抱著板夾在人群裡穿梭，腰上掛著手電筒。她看到我，笑著走過來。');
+  await say('ling','妳是新面孔吧？我是自治會幹事莊美玲，今晚的流程都歸我管。喝點東西嗎？烏梅湯，自治會招待。','normal');
+  await N('她遞來一個保特瓶，瓶蓋上印著四個字：「林嬸豆花」。');
+  await say('ling','林嬸借我們的回收瓶，環保！','normal');
+  await Me('謝謝。——妳在這裡工作很久了？');
+  await say('ling','十二年。會長把這個夜市交給我，我一天也不敢鬆懈。','normal');
+  await N('她說話的時候，一個攤商過來問停車證怎麼補辦，她笑著接過去；隔壁攤的老婦人腳不舒服，她蹲下去，從口袋掏出一小包痠痛貼布，貼在人家膝蓋上。');
+  await say('ling','夜市就像一個家，誰有困難，大家都會幫。','normal');
+  await Me('都更的事，自治會怎麼看？');
+  await say('ling','都更？我也是昨天看公告才第一次聽說。會長什麼都沒跟我提過，我心裡也很亂。','nervous');
+  await Me('（她說得很自然。這個人，是真的在乎這裡吧。）');
+  await say('ling','對了，要是看到迷路的老人家，麻煩幫忙留意一下喔。今天人多。','normal');
+  await N('她走遠以後，我才發現，手上那瓶烏梅湯，我一口也還沒喝。我把它放進了包包。');
+ },
+ async an(){
+  S.flags.a_an=1;
+  await N('雞排攤的油鍋滋滋作響。一個年輕人一邊翻鍋，一邊盯著手裡的筆記本。他的圍裙上，別著一枚紅色放大鏡的小徽章。');
+  await say('an','一塊七十。要辣嗎？','normal');
+  await Me('不要辣。——你的筆記本，是在記帳嗎？');
+  await say('an','（闔上本子）打工的人，都會記點東西。','normal');
+  await Me('我也有一本。我習慣一邊聽人說話，一邊把人跟人、話跟話連起來。誰說了什麼，跟誰對得上。');
+  await say('an','連起來的線，不是證據。','normal');
+  await Me('但線會告訴我，該去看哪裡。');
+  await say('an','線只會讓妳看見「想看見」的地方。證據才會告訴妳「發生過什麼」。……靠感覺走路的人，我見多了。','normal');
+  await Me('那你靠什麼？','angry');
+  await say('an','時間、數字、紀錄。人會說謊，時間不會。','normal');
+  await Me('人會說謊，所以才要聽聽他為什麼說謊。','determined');
+  await say('an','……雞排好了。','normal');
+  await N('我們互看了一眼，各自覺得對方很麻煩。');
+ },
+ async cai(){
+  if(!S.flags.a_cai){S.flags.a_cai=1;
+   await say('cai','雞排！脆！嫩！……小周！你這樣排雞排，客人還要不要吃！','normal');
+   await say('cai','哎呀，抱歉，嚇到妳了。我是隔壁這攤的蔡老闆。小周這孩子，兩個月前來打工，做事很認真，就是話太少，一天講不到十句。','normal');
+   await say('cai','這個夜市，我看過它從三十攤變成七十攤。現在說要拆？我女兒學費還沒繳完咧。','normal');
+   await Me('蔡老闆很擔心？');
+   await say('cai','擔心有什麼用，我們只是賣雞排的。……會長人是不壞啦，只是他最近，講話都很小聲。','normal');return}
+  if(S.flags.haiGone&&!S.flags.cai2){S.flags.cai2=1;
+   await say('cai','大海剛剛走得那麼快，鐵捲門只拉一半，還特地掛牌子。……他就是這種人，再氣也要掛牌子。','normal');return}
+  await say('cai','要不要再來一份？算妳八折！','normal')},
+ async li(){
+  if(!S.flags.a_li){S.flags.a_li=1;
+   await say('li','小姐，逛得開心？我是保全老李，夜市的巡邏，歸我管。','normal');
+   await say('li','後面那個冷凍貨櫃，是會長下午叫人運進來的，放慶典的冰品。鎖是他自己扣的，鑰匙就那一把，他放在身上。','normal');
+   await N('他說話的時候，西裝口袋裡的塑膠袋沙沙作響。像是什麼骨頭。');
+   await say('li','（發現我在看，輕咳一聲）咳。沒、沒什麼。','nervous');return}
+  await say('li','有事再叫我。我去巡邏。','normal')},
+ async wu(){
+  if(!S.flags.wuQ){S.flags.wuQ=1;
+   await N('牆邊的塑膠椅上坐著一位白髮老奶奶，兩手在膝蓋上摸索著，像在找什麼。');
+   await say('wu','小姐……小姐，妳有沒有看到我的眼鏡？黑色的，圓圓的，用橡皮筋綁在鏡腳上。','nervous');
+   await say('wu','我孫子今天要來夜市找我，我沒有眼鏡，認不得他……','nervous');
+   await Me('我幫您找。您剛才去過哪些地方？');
+   await say('wu','先去吃了豆花，然後去看那個大公告板。大家都圍著看，我也去看，可是字太小，我就把眼鏡拿下來擦……然後就……','normal');
+   await N('（支線：幫吳阿嬤找眼鏡。找找看有發光的地方。）');return}
+  if(S.flags.wuDone){await say('wu','小姐，我孫子來過囉，一直誇我的眼鏡很帥！','normal');return}
+  if(S.flags.wuFixed){
+   await N('我把修好的眼鏡，輕輕戴回她臉上。');
+   await say('wu','啊……看得見了。一個一個，都看得見了。燈籠是紅的，豆花是白的——還有，妳。','normal');
+   await say('wu','小姐，妳的圍巾，真好看。誰織的？','normal');
+   await Me('我阿嬤。……她最後那個冬天，一針一針織的。','sad');
+   await say('wu','織得有一點歪，對不對？','normal');
+   await Me('……對。左邊比右邊長。','sad');
+   await say('wu','歪歪的，才暖。妳阿嬤，一定很疼妳。','normal');
+   await scarf('我握住圍巾的流蘇，鼻子忽然有點酸。');
+   await N('吳阿嬤從塑膠袋裡掏出一顆花生麻糬，硬塞進我手裡：「吃，不要客氣。我孫子買太多了。」');
+   await N('那顆麻糬，是溫的。');
+   S.flags.wuDone=1;return}
+  if(S.flags.wuFound){
+   await N('我把找到的眼鏡遞給她——右邊的鏡腳，被人踩彎了，戴不上去。');
+   await say('wu','啊，眼鏡……可是，彎了。彎了就戴不牢了……','nervous');
+   await Me('我找人幫您修。請在這裡等我。');
+   S.flags.wuWait=1;return}
+  if(S.flags.wuWait){await say('wu','我在這裡等，不會亂走。','normal');return}
+  await say('wu','小姐，我的眼鏡……還沒找到嗎？','nervous')}
+};
+const A1CHAT={
+ shan:[[['shan','妳今晚想吃什麼，我偷偷幫妳多加一顆滷蛋。','normal']],[['shan','我爸罵人很大聲，可是他每次吵完都會偷偷煮宵夜。','normal']]],
+ lin:[[['lin','今天人真多。多吃點，豆花不要錢的時候最好吃。','normal']],[['lin','妳要常常來啊。這條街上，有人認得妳的臉，就有地方可以回來。','normal']]],
+ ling:[[['ling','活動順序都排好了，只等燈光秀。','normal']],[['ling','要幫忙的話，隨時跟我說。','normal']]],
+ an:[[['an','別擋在油鍋前面。','normal']],[['an','……妳的線，連完了嗎？','normal']]]};
+async function a1chat(p){const L=A1CHAT[p];if(!L)return;const n=(S.flags['cc_'+p]||0);S.flags['cc_'+p]=n+1;for(const [w,t,e] of L[n%L.length])await say(w,t,e)}
+async function a1secret(p){
+ if(p==='shan'){
+  await say('me','收據背面的那些畫……我真的覺得很好看。','normal');
+  await say('shan','……真的嗎？','nervous');
+  await say('shan','我上個月，拿到美術系的錄取通知。我申請保留入學，沒有告訴我爸。','nervous');
+  await say('shan','他以為，我是自己想留下來顧攤位的。','broken');
+  await Me('我不會說。畫，繼續畫。','sad');S.flags.shanArt=2;return}
+ if(p==='lin'){
+  await say('me','林嬸，燈下面那張空椅子……是給誰的？','normal');
+  await say('lin','……妳看出來啦。','nervous');
+  await say('lin','每天收攤前，我都多盛一碗，不加配料，擺給他。他走了十年了，我還是改不掉。','normal');
+  await Me('那碗豆花，會一直在那裡。','sad');S.flags.linHusb=2;return}
+}
+async function a1talk(p){
+ const first={shan:'a_shan',lin:'a_lin',hai:'a_hai',ling:'a_ling',an:'a_an'}[p];
+ if(p==='an'&&S.flags.wuFound&&!S.flags.wuFixed&&S.flags.a_an){
+  await Me('可以借你的螺絲起子嗎？這副眼鏡的鏡腳，彎了。');
+  await say('an','（看了眼鏡一眼，從工具包裡拿出一把迷你起子）……這種事，不用借。','normal');
+  await N('他低下頭，三兩下把鏡腳扳直，再把螺絲拴緊。動作俐落得像在拆解一個小機器。');
+  await say('an','告訴那位奶奶，最好多買個備用的。','normal');
+  await Me('你還挺會修東西的。');
+  await say('an','……以前常常修。','nervous');
+  S.flags.wuFixed=1;S.flags.wuWait=0;return}
+ if(first&&!S.flags[first])return A1[p]();
+ if(p==='hai'){await N('攤位的鐵捲門拉了一半，上面掛著「休息十分鐘」的牌子。');return}
+ if(['cai','li','wu'].includes(p))return A1[p]();
+ const opts=[['聊聊','chat']];
+ if(p==='shan'&&(S.flags.shanArt||0)<2)opts.push(['追問：收據背面的畫','sec']);
+ if(p==='lin'&&(S.flags.linHusb||0)<2)opts.push(['追問：燈下面的空椅子','sec']);
+ opts.push(['沒事了','x']);
+ const v=await choose(opts);
+ if(v==='chat')await a1chat(p);else if(v==='sec')await a1secret(p);
+ if(a1ready()&&!S.flags.a1hint){S.flags.a1hint=1;await N('（該認識的人，差不多都聊過了。舞台那邊，燈光秀快開始了。）')}}
+/* ---- Act 1 hotspots ---- */
+async function a1notice(){
+ await N('夜市入口的看板上，貼著一張大紅公告：《福安夜市　都市更新說明會》。');
+ await N('底下的日期，是【昨天】。');
+ await N('攤商們三三兩兩圍在看板前，臉色都很難看。有人小聲說：「這種事，怎麼昨天才說……」');
+ if(S.flags.wuQ&&!S.flags.wuFound){await N('看板底下的石板縫裡，有個黑色的東西在反光——是一副圓框老花眼鏡，右邊的鏡腳被人踩彎了。');S.flags.wuFound=1;await N('（找到吳阿嬤的眼鏡了。）')}
+ await getEv('notice')}
+async function a1bench(){
+ await N('路邊的木長椅。我坐下來，把剩下的豆花湯底，慢慢喝完。');
+ if(S.flags.wuQ&&!S.flags.wuFound)await N('椅子上、椅子底下，都沒有眼鏡。（吳阿嬤說，她後來是去看公告板的。）');
+ else await N('遠處傳來攤商的叫賣聲，油煙混著糖水的味道。這條街，有人認得我的臉嗎？我想。');}
+/* ---- Act 1 → Act 2 ---- */
+async function act1End(){
+ S.flags.a1done=1;setBGM('inv');
+ await chapter('21:30<br>燈光秀');
+ setBg('stage');S.scene='market';
+ await N('夜市舞台的燈光亮起來。大螢幕上播放著「福安夜市四十週年」的影片，會長王仲義的笑臉，掛在最中間。');
+ await N('可是，真人沒有上台。');
+ await say('shan','奇怪……我爸去找會長談，到現在都沒回來。手機也打不通。','nervous');
+ await Me('別急。也許只是談得久。');
+ await scarf('嘴上這麼說，我卻不由自主地摸了摸圍巾。');
+ await say('an','（不知什麼時候，站到我身後）會長的致詞，排在 21:45。','normal');
+ await Me('你怎麼知道流程？');
+ await say('an','舞台旁邊貼著流程表。——妳連別人說的話都要連起來，卻不看牆上貼的？','normal');
+ await Me('……你這個人，真的很欠揍。','angry');
+ await say('ling','（匆匆走過來）各位別擔心！會長臨時有事，致詞改播影片！','normal');
+ await N('她對我們點頭微笑，拿著手電筒，往後巷的方向走去。時間是 21:32。');
+ await N('21:40。');
+ SFX.blackout();setBg('stage','brightness(.12)');
+ await N('「啪」——整座夜市的燈，同時熄滅。');
+ await N('黑暗裡，有人驚呼，有人笑，有人喊「不要擠」。有一個人，從我身邊用力擦過去。');
+ await N('肩膀被撞到的瞬間，我外套口袋裡，多了一樣東西。');
+ await sleep(window.__fast?20:900);
+ await N('三分鐘後，燈亮了。');
+ setBg('market');
+ await N('我把手伸進口袋——是一張摺成四折的紙條。沒有署名，原子筆字跡很工整：\n「福安夜市的案子，別被鑰匙騙了。去看貨櫃鎖上有沒有霜。」');
+ await Me('……這個字跡。','surprised');
+ await N('我盯著紙條很久，然後把它摺好，放回口袋。');
+ await getEv('note');
+ await chapter('第二幕<br>鎖在貨櫃裡的謊');
+ S.flags.act2=1;setBGM('inv');
+ await N('22:05。後巷傳來保全老李的叫聲。');
+ await N('冷凍貨櫃的掛鎖被剪開了——會長王仲義倒在裡面，已經沒有呼吸。');
+ await N('警察封鎖了夜市。所有人，都被圈在原地等筆錄。');
+ await N('貨櫃的鑰匙，在陳大海攤位的玻璃櫃檯上被找到。而陳大海，從 19:50 離開以後，就再也沒有人見過他。');
+ await say('shan','許姐姐！！','broken');
+ await say('shan','警察說，我爸是兇手……他們說鑰匙在他攤位上……可是我爸他連殺雞都不敢看啊！','broken');
+ await Me('小珊，冷靜一點。先告訴我，警察怎麼說。');
+ await say('shan','我認識分局的叔叔，他偷偷告訴我——','normal');
+ await getEv('body');await getEv('blackout');
+ await say('shan','所以他們認定，是我爸趁停電那三分鐘動手的……','nervous');
+ await say('shan','拜託妳。我知道這很不專業……可是，今天傍晚，妳是第一個沒有叫我「小孩子別管」的人。','broken');
+ await Me('（我低頭，看見自己的手，在發抖。）','sad');
+ await Me('好。我接。','determined');
+ await say('an','（雙手插在口袋，走了過來）妳要接？','normal');
+ await Me('你有意見？');
+ await say('an','雲嶺開發最近很愛派「顧問」去各個老市場。這麼剛好，這種時候冒出一個要「幫陳大海」的人。','normal');
+ await Me('傍晚才認識的人，這麼快就想懷疑我？');
+ await say('an','我只相信紀錄。傍晚的事，沒有紀錄。','normal');
+ await say('shan','你們兩個，不要吵啦！','nervous');
+ await say('an','總之，我也不相信陳大叔是兇手。他請我吃過滷蛋。','normal');
+ await Me('在查清楚你是誰之前，我不會把背對著你。');
+ await say('an','彼此彼此。','normal');
+ setPor(null);
+ await N('🔍 點畫面上發光的地方調查；用下方按鈕跟人說話。\n📒 證物隨時可以在右上角查看；證詞卡關可以按「💡 提示」。');
+ S.scene='market'}
+const canAccuse=()=>!!(S.flags.linFixed&&S.ev.includes('oldphoto')&&S.ev.includes('linFix')&&S.flags.anDone&&S.flags.cdDone&&S.flags.shanMet&&S.flags.lingC&&S.flags.lingD&&S.ev.includes('frost')&&S.ev.includes('forms')&&S.ev.includes('shoe')&&(S.ev.includes('stream')||S.ev.includes('tech')));
 function todoText(){const m=[];
  if(!S.flags.shanMet)m.push('跟小珊聊聊');
  if(!S.flags.anDone)m.push('周予安的證詞（先去會長辦公室看看）');
@@ -471,6 +821,8 @@ function todoText(){const m=[];
  if(!S.ev.includes('forms'))m.push('會長辦公室的廢紙簍');
  if(!S.flags.lingMet)m.push('跟莊美玲聊聊');
  else{if(!S.flags.lingC)m.push('問莊美玲都更的事');if(!S.flags.lingD)m.push(S.ev.includes('sauce')?'問莊美玲攤位地下室的事':'先問小珊關於陳大海攤位的事')}
+ if(!S.ev.includes('yunling'))m.push('會長辦公室的抽屜');else if(!S.ev.includes('oldphoto'))m.push('會長辦公室牆上的合照（看過雲嶺明細再看）');
+ if(S.flags.linWrong&&!S.flags.linFixed)m.push('林嬸那邊，還有話沒說完');else if(!S.flags.linWrong)m.push('還有幾條線索沒收齊：後巷的箱子、蔡老闆、會長的書桌');
  if(S.flags.cdDone&&!S.ev.includes('stream')&&!S.ev.includes('tech'))m.push('停電時她在哪（直播或燈光師）');
  return m}
 const fmtMS=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
@@ -478,9 +830,9 @@ function cdModal(secs,left,O,used){setPor(null);hideBox();return new Promise(res
  O.forEach(([k,t])=>{const d=document.createElement('div');d.className='ev pz'+(used.has(k)?' used':'');d.dataset.v=k;d.textContent=(used.has(k)?'✔ ':'')+t;if(!used.has(k))onTap(d,()=>{SFX.tick();m.style.display='none';L.style.gridTemplateColumns='';res(k)});L.appendChild(d)})})}
 async function countdown(){
  setBGM('cd');SFX.blackout();
- await chapter('第二章<br>停電三分鐘');
+ await chapter('停電三分鐘');
  setBg('stage','brightness(.4)');
- await N('21:40。夜市的燈，一盞接一盞熄滅。');
+ await N('回到 21:40。夜市的燈，一盞接一盞熄滅。');
  await N('三分鐘後燈亮了。可是這三分鐘裡發生的事，只有「當時在附近的人」才記得清楚——而且人的記憶，過一會兒就會變糊。');
  await say('an','警察現在只顧著找陳大海，沒人問過這些人。我只能帶妳去問 4 個人，選對人，別浪費時間。','normal');
  const O=[['kai','🎚️ 舞台｜燈光師阿凱'],['ray','📱 舞台前｜直播主小宇'],['li','🔦 後巷｜保全老李'],['cai','🍗 炸雞排攤｜蔡老闆'],['tea','🧋 夜市口｜手搖飲店員'],['dj','🎧 舞台側｜DJ 阿龍']];
@@ -502,11 +854,11 @@ async function countdown(){
  await say('an','停電那三分鐘，有人不在她「應該在」的地方。……剩下的，就看妳能不能讓她自己說出來了。','normal');
 }
 /* ---------- talks ---------- */
-async function talk(p){
+async function talk2(p){
  if(p==='shan'){
   if(!S.flags.shanMet){S.flags.shanMet=1;
-   await say('shan','許偵探……謝謝妳願意相信我爸。','normal');
-   await say('shan','我爸陳大海，在這裡賣了二十年滷味。他脾氣很直，也真的跟會長吵過架……可是他連殺雞都不敢看。','nervous');
+   await say('shan','許姐姐……謝謝妳願意接。','normal');
+   await say('shan','我爸脾氣很直，也真的跟會長吵過架……可是他連殺雞都不敢看。','nervous');
    await say('shan','七點五十，我爸去自治會辦公室，隔壁攤的人聽到他在吼：「你把大家賣了！」出來以後，他就再也沒回攤位了。','nervous');
    await say('me','「你把大家賣了」——他在說什麼？');
    await say('shan','我不知道。可是我爸最近一直在翻攤位的登記文件，臉色很難看……','nervous');
@@ -539,7 +891,7 @@ async function talk(p){
   return}
  if(p==='ling'){
   if(!S.flags.lingMet){S.flags.lingMet=1;
-   await say('ling','妳就是小珊找來的偵探吧？我是自治會幹事，莊美玲。會長的事……我到現在還不敢相信。','normal');
+   await say('ling','許小姐……傍晚才跟妳聊過，晚上就出這種事。會長的事，我到現在還不敢相信。','nervous');
    await say('me','請節哀。聽說，會長最信任的人就是妳。');
    await say('ling','我跟了他十二年，每一件事他都交給我辦……','nervous');
    await say('me','莊幹事，停電那三分鐘，妳人在哪裡？');
@@ -561,11 +913,254 @@ async function talk(p){
   return}
  if(p==='li'){
   if(!S.flags.liMet){S.flags.liMet=1;
-   await say('li','許偵探？小珊跟我說過了。唉……陳大海那個人，我認識二十年，他不是那種人。','normal');
+   await say('li','許偵探。唉……陳大海那個人，我認識二十年，他不是那種人。','normal');
    await say('li','貨櫃，我只能讓妳看，不能碰。我剪開鎖的時候，會長已經冰得硬邦邦的了……','nervous');return}
   if(S.flags.cdDone){await say('li','該說的我都說了。找到大海，拜託了。','normal');return}
   await say('li','現在巷子裡人太多，等有空的時候再問我吧。我巡邏的事，我都記得。','normal')}
 }
+/* ---------- Act 2 : 錯誤的推理、低谷、翻轉 ---------- */
+const L1={title:'許晴的筆記：林嬸',desc:'把證物和推論連起來。點左邊一張，再點右邊相關的一張。',okText:'✔ 三條線，都指向她',
+ L:[['bottle','🧃 空瓶：瓶蓋印著「林嬸豆花」，瓶口有白色粉末'],['draft','📝 會長草稿：林嬸，是最後一個沒簽的人'],['lintest','👀 蔡老闆：20:50，林嬸提著一袋空瓶進後巷']],
+ R:[['means','💊 手段：藥是下在她的瓶子裡'],['motive','😠 動機：會長要強制處理她的攤位'],['chance','🕗 機會：她進過後巷——貨櫃就在那裡']],
+ E:[['bottle','means','瓶子是林嬸的。藥，就是從她的瓶子下的。'],['draft','motive','會長要奪走她先生留下的攤子。她有理由恨他。'],['lintest','chance','她進過後巷。而貨櫃，就在後巷。']]};
+const L1b={title:'重新連線：林嬸',desc:'拆掉舊的線，重畫。這一次，先聽人說完。',okText:'✔ 線，換了一個方向',
+ L:[['b','🧃 瓶蓋印著「林嬸豆花」'],['t','👀 蔡：20:50 林嬸提著空瓶進後巷'],['m','🍵 傍晚，美玲遞給我的烏梅湯'],['s','🤐 林嬸：「我答應過她，不能說」']],
+ R:[['r1','林嬸把十二個瓶子，借給了美玲'],['r2','空瓶，是美玲託林嬸送去後巷口的'],['r3','烏梅湯的瓶蓋，一模一樣印著「林嬸豆花」'],['r4','美玲請她：「別跟人說」']],
+ E:[['b','r1','瓶子是林嬸的，可是借出去的人是美玲。'],['t','r2','林嬸進後巷，是替別人送瓶子。巷口，不是貨櫃。'],['m','r3','傍晚，美玲遞給我的那一瓶，瓶蓋就是同一種。'],['s','r4','林嬸沒有心虛。她只是守著一個承諾。']]};
+const L2={title:'許晴的筆記：莊美玲',desc:'在按下「指認」之前，再連一次線。',okText:'✔ 我知道她是誰了',
+ L:[['p07','🖼️ 十週年合照：「莊記菜行」攤位 07'],['yl','📜 雲嶺明細：第一筆，攤位 07'],['fm','📄 三十一份讓渡書：經辦人莊美玲'],['lin','🧓 林嬸：「她一筆一筆，幫我填表」']],
+ R:[['q1','07，是她爸爸的攤位'],['q2','她比誰都清楚，被賣掉是什麼滋味'],['q3','然後她自己，成了那支筆'],['q4','她對別人的好，也是真的']],
+ E:[['p07','q1','合照裡的男人是莊記菜行的老闆。莊記，莊美玲。'],['yl','q2','她父親的攤位，是被賣掉的第一筆。'],['fm','q3','三十一份。每一份，都簽著她自己的名字。'],['lin','q4','貼布、表格、停車證。那些，不是裝的。']]};
+async function chk(){if(S.flags.linWrong)return;if(['bottle','draft','lintest'].every(k=>S.ev.includes(k)))await linWrongIntro()}
+async function linWrongIntro(){
+ S.flags.linWrong=1;setBGM('test');
+ await N('……三樣東西，放在筆記本的同一頁。');
+ await Me('空瓶，瓶蓋印著「林嬸豆花」。會長桌上的草稿，說林嬸是最後一個沒簽的人。蔡老闆說，20:50，她提著一袋空瓶進了後巷。','normal');
+ await Me('有手段，有動機，有機會。……三條線，連在同一個人身上。','determined');
+ await linkScreen(L1);
+ await Me('（我把筆尖，重重地點在「林嬸」兩個字上。）','determined');
+ await N('一個人影，從轉角的暗處走了出來。');
+ await say('an','妳那三條線，連得很漂亮。','normal');
+ await Me('你偷聽？','angry');
+ await say('an','我只是剛好站在這裡。——瓶蓋印著誰的名字，只能說明「瓶子經過誰的手」，不能說明「誰下的藥」。','normal');
+ await Me('那她為什麼要提著一袋瓶子去後巷？','angry');
+ await say('an','所以才要問。不是「指控」，是「問」。這兩個，在老人家的耳朵裡，是不一樣的東西。','normal');
+ await Me('我只是去問。','angry');
+ await say('an','妳問的方式，就叫指控。……至少，等我確認過時間再去。','normal');
+ await Me('等你？這種時候，每一分鐘，大海都可能……','angry');
+ await say('an','——妳是在急，還是在怕？','normal');
+ await Me('……！','surprised');
+ await N('我沒有回答。我把筆記本合起來，轉身，往豆花攤的方向走去。');
+ await linExam()}
+async function linExam(){
+ go('market');
+ await N('豆花攤的黃燈籠，還亮著。林嬸坐在矮凳上，把一碗沒賣出去的豆花，慢慢推到一旁。');
+ await say('lin','……許小姐，又來吃豆花嗎？','normal');
+ await Me('林嬸，我想請教，今晚的事。','normal');
+ const k=await crossExam('lin','林嬸的證詞：今晚',T.L);
+ if(k==='leave')return;
+ await Me('二十點五十分，蔡老闆親眼看見，妳提著一大袋空瓶，走進後巷。妳剛才說，連後巷長什麼樣子都沒看過？','angry');
+ await say('lin','……！','nervous',{shake:true});
+ await Me('瓶子是妳的。人是妳去的。會長桌上，還有一份要強制處理妳攤位的草稿。','determined');
+ await say('lin','我……我不是……','broken');
+ await N('四周的攤商，一個一個，圍了過來。');
+ const v=await stance('林嬸的嘴唇在發抖。圍過來的人越來越多。我要怎麼問下去？',{sym:'林嬸，我知道妳很為難。把實話告訴我，我會陪著妳。',firm:'瓶子是妳的，人是妳看到的，藥呢？現在說，還是等警察來問！',calm:'我只想知道，那袋瓶子，是要送去給誰的。'});
+ if(v==='sym'){
+  await say('lin','我……我不能說……我答應過人家……','broken');
+  await Me('（答應過誰？……為什麼不能說？）','sad');
+  await N('她只是搖頭，眼淚一滴一滴，落在沒有賣出去的豆花裡。')}
+ else if(v==='firm'){
+  await say('lin','不是……我沒有……','broken',{shake:true});
+  await N('她的手按住胸口，整個人慢慢縮了下去，蹲在地上，打翻了那碗豆花。白色的湯汁，順著石板縫，流了一地。');
+  await say('wu','啊呀……','nervous');
+  await N('有人大喊：「叫救護車啊！」');S.flags.linCollapse=1}
+ else{
+  await say('lin','……我答應過人家，不能說。','nervous');
+  await N('她說完，就把頭低了下去，再也沒有看我。人群裡，有人小聲地說：「果然有鬼。」');
+  await say('cai','我就說嘛，那種老人家，最會裝可憐。','normal')}
+ await say('shan','（衝過來，擋在林嬸面前）夠了！！','broken',{shake:true});
+ await say('shan','林嬸是看著我長大的！我請妳來找我爸，不是來逼一個老人家的！','broken');
+ await Me('我只是……','sad');
+ await say('shan','妳憑什麼認定是她？！就憑一個瓶子？！','broken');
+ await N('我說不出話來。因為，我確實，只有一個瓶子。');
+ await say('lin','……小珊，別怪她。是我自己，不好。','broken');
+ await N('林嬸扶著桌角，慢慢站起來。她把圍裙解下來，一摺、兩摺，疊得整整齊齊，放在攤位上。');
+ await say('lin','今天不做了。……那張紙，我簽。留著這個攤子，有什麼用呢。','broken');
+ await Me('林嬸，不要——','sad');
+ await say('lin','妳們每個人，都想替我決定。我自己決定一次，不行嗎？','broken');
+ await N('黃燈籠，被她伸手，一盞一盞，熄掉了。');
+ S.flags.linHit=1;S.flags.linClosed=1;S.flags.shanCold=1;S.miss+=2;
+ await lowPoint()}
+async function lowPoint(){
+ setBGM(null);setBg('stage','brightness(.5)');S.scene='market';
+ await chapter('低谷');
+ await N('舞台側邊的階梯，沒有人。遠處警車的紅藍光，一閃，一閃，沒有聲音。');
+ await Me('……我又這樣了。','sad');
+ await scarf('我下意識去摸圍巾，手指卻停在流蘇上。');
+ await N('阿嬤的雜貨店被「收購」那年，她坐在店門口，看著新的招牌被掛上去。簽字的那個人，一直在說：「為了您好。」');
+ await N('她最後一個冬天，一針一針，織了這條圍巾。左邊比右邊長。');
+ await N('那時候，我是個大學生。只會哭，只會罵，卻不知道，該去問誰。');
+ await Me('我發過誓。不會再讓任何人，被一張紙，奪走他最重要的東西。','sad');
+ await Me('結果今晚，拿著那張紙去逼人的，是我。','sad');
+ await Me('我連她為什麼不說，都沒有問。','sad');
+ await N('我把臉埋進圍巾裡。它還有一點點，豆花的味道。');
+ await sleep(window.__fast?20:700);
+ await N('一罐溫熱的紅茶，輕輕放在我旁邊的階梯上。');
+ await say('an','喝。','normal');
+ await Me('……你是來看我笑話的嗎？','sad');
+ await say('an','不是。我說過，線不是證據。','normal');
+ await say('an','但我後來去量了。從豆花攤走到貨櫃，來回九分鐘。蔡老闆說，林嬸 21:00 就回來收碗了，沒離開過五分鐘。','normal');
+ await say('an','她進後巷，是真的。可是，她去的地方，不是貨櫃。','normal');
+ await Me('……所以，我剛剛，是在欺負一個沒做錯事的人。','sad');
+ await say('an','妳是在犯一個「所有聰明人都會犯」的錯——太快相信，自己連出來的線。','normal');
+ await Me('你好像，說得很有經驗。','sad');
+ await say('an','……我也犯過。以後再說。','nervous');
+ await say('an','走吧。去跟她道歉。道完歉，再問一次——這次，換個問法。','normal');
+ await Me('……為什麼幫我？','sad');
+ await say('an','我不是幫妳。我的紀錄裡，還缺她那一段。','normal');
+ await N('我低頭，笑了一下。這個人，比我以為的，笨一點。');
+ await Me('……謝謝。','sad');
+ await say('an','不用。……還有，妳剛剛，一直在摸圍巾。難過的時候，不要一個人坐在這種地方。','nervous');
+ await Me('……你的筆記本，有寫這個嗎？','normal');
+ await say('an','（把本子塞進口袋）沒有。','normal');
+ S.flags.lowDone=1;setBGM('inv');setBg('market');
+ await Me('（深呼吸。去道歉。這一次，換個問法。）','determined')}
+async function linApology(){
+ go('market');
+ await N('豆花攤的燈籠暗著。林嬸坐在攤位後面的矮凳上，圍裙擱在膝蓋上。她抬頭看見我，沒有說話。');
+ const v=await stance('我該先說什麼？',{sym:'對不起。我只想著把線連起來，沒有想過，被連起來的，是一個人。',calm:'我誤會妳了，非常抱歉。如果妳願意，我想聽聽，那袋瓶子的事。',firm:'我錯了。但這件事，壓不得。說出來，我跟妳一起扛。'});
+ if(v==='sym'){
+  await say('lin','……傻孩子。','normal');
+  await say('lin','妳坐。這碗，我本來要擺給他的——今天先給妳。','normal');
+  if((S.flags.linHusb||0)<2){S.flags.linHusb=2;await say('lin','他叫我家那口子，走了十年了。我每天收攤前，都多盛一碗，擺在那張椅子上，擺到收攤。','normal')}
+  await N('我接過那碗豆花。很燙，也很甜。')}
+ else if(v==='calm'){
+  await say('lin','……妳這孩子，連道歉，都這麼有條理。','normal');
+  await say('lin','我不是氣妳。我是氣我自己，嘴巴縫得那麼緊。','nervous')}
+ else{
+  await say('lin','……連道歉，都這麼大聲。','nervous');
+  await say('lin','不過，我聽得出來，妳是真的。……好，我說。','normal')}
+ await say('lin','美玲那孩子……八點半，來跟我借瓶子。她說，自治會要招待志工喝烏梅湯，借十二個。','normal');
+ await say('lin','八點五十，她又拜託我，把洗乾淨的空瓶，送到後巷口的冰箱。她說——「林嬸，這是我自己掏錢請大家的，會長不喜歡我亂花錢，別跟人說。」','normal');
+ await say('lin','我哪裡知道，會出這種事。她幫過我好多次。我的補助、我的表格，每一張，都是她一筆一筆，蹲在這裡幫我填的。','broken');
+ await say('lin','後來警察問我，我的嘴，就像被縫起來。我答應過她。','broken');
+ await Me('（她叫林嬸「別跟人說」。……可是，只是請大家喝飲料的人，為什麼要封口？）','surprised');
+ await Me('傍晚，她也遞給我一瓶。瓶蓋，就是妳的。','normal');
+ await linkScreen(L1b);
+ await getEv('linFix');
+ S.flags.linFixed=1;S.flags.linClosed=0;
+ await Me('林嬸，那張紙，先別簽。給我一點時間。','determined');
+ await say('lin','……紙，我放在口袋裡了。不簽，也不丟。','normal');
+ await N('她重新繫上圍裙，把黃燈籠，一盞一盞，重新點亮。');
+ await N('（也許，該去跟小珊，好好道個歉。）')}
+async function shanReconcile(){
+ S.flags.shanCold=0;
+ await Me('小珊。對不起。我錯了。','sad');
+ await say('shan','……林嬸跟我說了。她說，妳去道歉了。','nervous');
+ await say('shan','我也不好。我吼妳，吼得那麼大聲。可是我真的好怕……我爸，不能再有人，被冤枉了。','nervous');
+ await Me('妳說得對。冤枉，是會傷人的。我差一點，變成我最討厭的那種人。','sad');
+ await say('shan','……所以，我們還是朋友嗎？','normal');
+ await Me('妳不怕，我是個很容易犯錯的偵探？','normal');
+ await say('shan','怕。可是妳會道歉。這樣的偵探，我信。','normal');
+ await scarf('我摸了摸圍巾。有一點癢，也有一點暖。')}
+async function grannyScene(){
+ await say('wu','小姐，我戴著眼鏡，看得好清楚，所以我想起來一件事。','normal');
+ await say('wu','停電以後沒多久，有個女孩子，穿著黃色的背心，手上拿著手電筒，從後面那條巷子走出來。走得很急，差點踩到我的腳。','normal');
+ await say('wu','我跟她說：「小姐，慢慢走」，她也沒理我。我還以為，是趕著去上廁所的呢。','normal');
+ await Me('吳阿嬤，謝謝您。您幫了很大的忙。','normal');
+ await getEv('granny')}
+async function anFix(){
+ await Me('可以借你的螺絲起子嗎？這副眼鏡的鏡腳，彎了。');
+ await say('an','（看了眼鏡一眼，從工具包裡拿出一把迷你起子）……這種事，不用借。','normal');
+ await N('他低下頭，三兩下把鏡腳扳直，再把螺絲拴緊。動作俐落得，像在拆解一個小機器。');
+ await say('an','告訴那位奶奶，最好多買個備用的。','normal');
+ await Me('你還挺會修東西的。');
+ await say('an','……以前常常修。','nervous');
+ S.flags.wuFixed=1;S.flags.wuWait=0}
+async function hesitate(){
+ S.flags.hesit=1;setBg('office','brightness(.8)');
+ await N('所有的線索，都到手了。我站在會長辦公室的檯燈下，握著筆記本。');
+ await N('只要按下「指認」，我就能找到陳大海。時間，還在走。');
+ await N('可是，我的手，停在半空中。');
+ await Me('……再讓我連一次線。','sad');
+ await linkScreen(L2);
+ await Me('她的爸爸，也是這樣被賣掉的。','sad');
+ await Me('她比任何人，都知道一張紙，可以奪走什麼。然後，她自己，拿起了那支筆。','sad');
+ await scarf('我又摸了摸圍巾。阿嬤那一年，來簽字的人，也不是壞人。他們都說：「為了您好」。');
+ await Me('如果我指認她，她的人生，就結束了。……可是，大海還在下面。','sad');
+ await stance('我深吸一口氣。見到她的時候，我要用什麼態度？',{sym:'我會讓她把話說完。她值得被聽見。',firm:'不管理由是什麼，她做的事，都必須被指出來。',calm:'我只談證據。其他的，留給法律。'});
+ await Me('走吧。','determined');
+ setBg('market')}
+async function talkLin2(){
+ if(S.flags.linWrong&&!S.flags.linHit)return linExam();
+ if(S.flags.linHit&&!S.flags.lowDone)return lowPoint();
+ if(S.flags.lowDone&&!S.flags.linFixed)return linApology();
+ if(S.flags.linFixed){
+  const n=(S.flags.cc_lin2||0);S.flags.cc_lin2=n+1;
+  const L=[[['lin','小珊那孩子，下午還送了一碗滷蛋過來。說是賠罪。我告訴她，不用，我又沒有生氣。','normal']],[['lin','美玲那孩子……唉。我還是不敢相信。她的貼布，我還貼在膝蓋上呢。','broken']]];
+  for(const [w,t,e] of L[n%L.length])await say(w,t,e);return}
+ await say('lin','警察問完了。他們說，大海那孩子不會是壞人……可是，鑰匙在他那裡。唉。','nervous');
+ await N('（林嬸在攤位上，慢慢擦著桌子。）')}
+async function talkCai2(){
+ if(!S.ev.includes('lintest')){
+  await say('cai','小姐，妳是偵探吧？警察問過我一輪了。','normal');
+  await say('cai','我是真的怕惹事，不過——20:50 左右，我確實看到林嬸，提著一大袋空保特瓶，走進後巷。','normal');
+  await say('cai','我也覺得奇怪，她膝蓋不好，平常連巷口都不愛走。','nervous');
+  await getEv('lintest');await chk();return}
+ if(S.flags.linHit&&!S.flags.linFixed){await say('cai','林嬸那樣子……唉。我是不是，不該亂說話。','nervous');return}
+ await say('cai','要查案，也要吃東西啊。雞排，小周炸的，一律八折。','normal')}
+async function talkWu2(){
+ if(!S.flags.wuDone){await A1.wu();if(!S.flags.wuDone)return}
+ if(!S.ev.includes('granny'))return grannyScene();
+ await say('wu','小姐，我孫子今天，還一直誇我的眼鏡很帥呢。','normal')}
+function migrate(){const f=S.flags;if(f.act2||!S.ev||!S.ev.includes('note'))return;
+ Object.assign(f,{act2:1,a1done:1,a_shan:1,a_lin:1,a_hai:1,a_ling:1,a_an:1,haiGone:1,linWrong:1,linHit:1,lowDone:1,linFixed:1,hesit:1,shanMet:f.shanMet||0});
+ ['draft','lintest','oldphoto','linFix'].forEach(k=>{if(!S.ev.includes(k))S.ev.push(k)});
+ if(S.finalPend)S.finalR=0}
+/* ---- secrets in Act 2 ---- */
+const SECL={
+ shan:['追問：收據背面的畫',()=>S.flags.shanMet&&!S.flags.shanCold&&(S.flags.shanArt||0)<2],
+ li:['追問：巷口的那個碗',()=>S.flags.liMet&&S.flags.h_bowl&&(S.flags.liDog||0)<2],
+ an:['追問：你修東西的手藝',()=>S.flags.anDone&&(S.flags.anMom||0)<1&&(S.flags.wuFixed||S.flags.cdDone)],
+ ling:['追問：妳隨身帶的貼布',()=>S.flags.lingMet&&S.flags.linFixed&&(S.flags.lingFather||0)<1]};
+async function secretTalk(p){
+ if(p==='shan')return a1secret('shan');
+ if(p==='li'){
+  await Me('老李，巷口那個碗……是給誰的？');
+  await say('li','……妳看到啦。老黃。我養了十五年的黃狗，去年冬天走的。','nervous');
+  await say('li','牠以前每天晚上陪我繞巷子。現在我一個人巡，總覺得背後少了個喘氣的聲音。','normal');
+  await say('li','碗我還是擺。有時候，會有流浪貓來吃。這樣也好。','normal');
+  await Me('牠一定很喜歡這條巷子。','sad');S.flags.liDog=2;return}
+ if(p==='an'){
+  await Me('你修東西的樣子，像在拆一個很熟的機器。');
+  await say('an','……我媽有一間小修理店。收音機、鬧鐘、電鍋，什麼都修。二十年。','nervous');
+  await say('an','雲嶺來「收購」的那年，她簽了字。之後，她再也沒有拿起過螺絲起子。','nervous');
+  await scarf('我沒有說話。只是想起了，另一個簽字的人。');
+  await say('an','所以我記筆記。人說的話，會被一張紙改掉。紀錄不會。','normal');
+  await say('an','……別跟人說。','nervous');
+  await Me('我不會。你的紀錄裡，也會有這一頁嗎？');
+  await say('an','不會。','normal');S.flags.anMom=1;return}
+ if(p==='ling'){
+  await Me('妳口袋裡，總是帶著痠痛貼布。');
+  await say('ling','……我爸以前腰不好。每天收攤，我都幫他貼。貼到後來，我連閉著眼睛，都貼得到穴位。','nervous');
+  await say('ling','後來他不在了，我還是習慣帶著。看到誰在揉腰、揉膝蓋，就忍不住。','normal');
+  await Me('林嬸的膝蓋，也是妳貼的。');
+  await say('ling','是啊。我是不是很雞婆？（笑著，眼眶卻有點紅）','normal');
+  await Me('（為什麼，聽起來這麼不像一個壞人？）','sad');S.flags.lingFather=1}}
+async function talk(p){
+ if(!S.flags.act2)return a1talk(p);
+ if(p==='lin')return talkLin2();
+ if(p==='cai')return talkCai2();
+ if(p==='wu')return talkWu2();
+ if(p==='an'&&S.flags.wuFound&&!S.flags.wuFixed&&S.flags.wuQ)return anFix();
+ if(p==='shan'&&S.flags.shanCold){
+  if(S.flags.linFixed)return shanReconcile();
+  await say('shan','……妳還有什麼事嗎？','nervous');await N('她別過臉。（先去跟林嬸，把話說清楚吧。）');return}
+ const sl=SECL[p];
+ if(sl&&sl[1]()){
+  const v=await choose([['聊案情','c'],[sl[0],'s'],['沒事了','x']]);
+  if(v==='s')return secretTalk(p);if(v==='x')return}
+ return talk2(p)}
 /* ---------- accusation & finale ---------- */
 async function pickModal(title,opts){setPor(null);hideBox();return new Promise(res=>{const m=$('#modal');m.style.display='flex';$('#mtitle').textContent=title;const L=$('#mlist');L.innerHTML='';L.style.gridTemplateColumns='1fr';$('#mdesc').textContent='選一個答案。';const B=$('#mbtns');B.innerHTML='';
  opts.forEach(([t,v])=>{const d=document.createElement('div');d.className='ev pz';d.dataset.v=v;d.textContent=t;onTap(d,()=>{SFX.tap();m.style.display='none';L.style.gridTemplateColumns='';res(v)});L.appendChild(d)})})}
@@ -578,6 +1173,7 @@ async function accuse(){
  if(S.finalPend){S.finalPend=0;await N(`繼續跟莊美玲對質。（信用剩下 ${S.hearts} 顆心）`);S.flags.final=1;hearts();setBGM('final');return finale()}
  if(!S.ev.includes('hatch')){const c=await choose([['先指認，之後再說','go','red'],['再找找看','no']]);setPor(null);
   if(c==='no'){await N('（還有一個疑問……陳大海人在哪？攤位底下的地下儲藏室，進去看過了嗎？）');return}}
+ if(!S.flags.hesit)await hesitate();
  S.flags.final=1;S.hearts=5;S.finalR=0;hearts();setBGM('final');
  await N('所有線索都到手了。🧩 推理拼圖——把真相拼起來吧。（答錯會扣一顆心，可以重來）');
  const WR={hai:()=>N('（大家都這麼想。可是，如果他真的是兇手，為什麼要把鑰匙擺得那麼整齊，還特地寫「休息十分鐘」？）'),an:()=>say('an','喂！我整個晚上，不是一直在被妳懷疑嗎！','broken',{shake:true}),li:()=>say('li','我、我只是巡邏的啊！','broken',{shake:true})};
@@ -592,21 +1188,37 @@ async function accuse(){
  await say('ling','……偵探小姐，妳在說什麼？我可是最難過的人啊。','normal');
  return finale()}
 async function finale(){
- const R=[T.F1,T.F2,T.F3,T.F4];
+ const R=[T.F1,T.F2,T.F3,T.F4,T.F5];
  const AF=[
   async()=>{if(S.ev.includes('tech'))await say('me','燈光師說，21:32 妳拿著手電筒往後巷走了，停電時舞台前根本沒有妳！');if(S.ev.includes('stream'))await say('me','直播回放更清楚——停電那一瞬間，補光燈掃過整排前排觀眾，一件黃背心都沒有！而且 21:38，有個拿著手電筒和板夾的黃背心，走向了後巷。');await say('ling','唔……！','nervous',{shake:true});await say('ling','我、我是去了一下洗手間！很快就回來了！','nervous')},
   async()=>{await say('me','鎖是停電才扣上的？貨櫃的掛鎖上，結著一層厚厚的霜——冷氣要吹一個多小時才會這樣！');if(S.ev.includes('patrol'))await say('me','而且老李說，21:00 他巡邏時，鎖就已經扣著了！');await say('me','會長早在停電以前，就被鎖進貨櫃了。停電那三分鐘，不是殺人的時間，是「放鑰匙」的時間！');await say('ling','就、就算鎖得早，那也是陳大海做的！','nervous',{shake:true})},
   async()=>{await say('me','妳說昨天才聽說都更？這 31 份讓渡書的影本，「經辦人」欄簽的，是妳的名字——日期，是三個月前！');await say('ling','那、那是會長叫我簽的……我不知道那是……','broken',{shake:true});await say('me','每一份都簽了名，還影印留底。這叫不知道？')},
+  async()=>{await Me('妳說，今晚沒有給任何人喝過烏梅湯？林嬸說，妳借了十二個瓶子，還要她「別跟人說」。傍晚，妳親手遞給我的那一瓶，瓶蓋印著「林嬸豆花」。','angry');await say('ling','……！那、那只是……','nervous',{shake:true});await Me('一件好事，為什麼要人別說？','determined');await say('ling','……因為，會長不喜歡我亂花錢……','nervous')},
   async()=>{await say('me','妳說，妳不知道他的攤位底下有地下室？那妳鞋底這圈暗紅色的黏漬，是什麼？');await say('me','攤位上賣的滷汁是黑褐色的。只有地下室陶甕裡的紅麴老滷，才是這種暗紅色！');await say('ling','…………！','broken',{shake:true})}];
- for(let j=S.finalR||0;j<R.length;j++){const r=R[j];const k=await crossExam('ling',`最終對質 ${j+1}/4：${r.title}`,r);if(k==='dead')return badEnd('hearts');if(k==='leave'){S.finalR=S.finalR||0;S.flags.final=0;S.finalPend=1;hearts();return}await AF[j]();S.finalR=j+1}
+ {const A0=AF[0];AF[0]=async()=>{if(S.ev.includes('granny'))await Me('吳阿嬤也看見了——停電沒多久，有個穿黃背心、拿著手電筒的女孩子，從後巷快步走出來，差點踩到她的腳！','determined');await A0()}}
+ for(let j=S.finalR||0;j<R.length;j++){const r=R[j];const k=await crossExam('ling',`最終對質 ${j+1}/5：${r.title}`,r);if(k==='dead')return badEnd('hearts');if(k==='leave'){S.finalR=S.finalR||0;S.flags.final=0;S.finalPend=1;hearts();return}await AF[j]();S.finalR=j+1}
  S.finalR=0;
  await flash('真相大白！');
  await say('ling','……是啊。是我殺的。','broken',{shake:true});
- await say('ling','我跟了他十二年。去年他說，夜市要重劃，叫我幫忙「整理」攤位的登記，事成以後，讓我當下一任自治會長。','broken');
- await say('ling','我簽了三十一份。我幫他騙了所有人。','broken');
- await say('wang','（回憶）美玲，這件事結束了。雲嶺那邊我已經談好了，沒有妳的份——這件事，跟妳沒有關係了。','normal');
- await say('ling','十二年……「跟妳沒有關係」。我拿起了桌上的獎盃。','broken');
- await say('ling','陳大海發現是我改了他的登記，衝進來吵的時候，我正好把會長……我只好，也把他處理掉。','broken');
+ setBGM('inv');
+ await Me('我想聽，為什麼。','sad');
+ await say('ling','「莊記菜行」……那是我爸的攤位。07 號。他在這裡，賣了三十年的菜。','broken');
+ await say('ling','十年前，會長說，這是「為了夜市好」，叫我爸簽了讓渡書。我爸以為，只是借出去，過一陣子就會還他。','broken');
+ await say('ling','簽完那天晚上，他把攤位的鑰匙放在桌上，看了很久。之後，他再也沒有走進夜市一步。','broken');
+ await scarf('我的手，不由自主地，按住了圍巾。');
+ await say('ling','我跟了會長十二年。我以為，只要我做得夠好，總有一天，我可以把那個位置，替我爸買回來。','broken');
+ await say('ling','去年，他叫我幫忙「整理」攤位登記，事成以後，讓我當下一任自治會長。我簽了三十一份。我騙了所有人，包括林嬸。','broken');
+ await say('wang','（回憶）美玲，結束了。雲嶺那邊我已經談好，沒有妳的份——這件事，跟妳沒有關係了。','normal');
+ await say('ling','十二年。「跟妳沒有關係」。……桌上，剛好有一座獎盃。','broken');
+ await say('ling','陳大海發現，是我改了他的登記，衝進來吵的時候，我已經……我只好，也把他處理掉。','broken');
+ await say('ling','我對林嬸好，是真的。我幫她貼的每一帖貼布，也是真的。可是我同時，也做了那些事。……兩個，都是我。','broken');
+ setPor(null);
+ await N('辦公室裡，很安靜。她沒有抬頭。');
+ const sv=await stance('她說完了。我該對她說什麼？',{sym:'妳父親那一天的背影，我懂。可是妳最後，變成了簽字的那個人。',firm:'妳的痛是真的。可是被妳簽掉的三十一個人，他們的痛，也是真的。',calm:'我會把妳說的，一字不漏地，交給檢察官。'});
+ S.flags.endSt=sv;
+ if(sv==='sym')await say('ling','……是啊。我最恨的，變成了我自己。','broken');
+ else if(sv==='firm')await say('ling','……我知道。所以，我才不敢看她們的眼睛。','broken');
+ else await say('ling','……謝謝妳，願意聽完。','broken');
  if(S.ev.includes('hatch')){
   await say('me','陳大海還活著，對吧？他就在自己的攤位底下——那個地下儲藏室。');
   await say('ling','……！妳、妳怎麼知道……','nervous',{shake:true});
@@ -633,7 +1245,7 @@ async function badEnd(v){
  if(c==='restart')return location.reload();
  S.flags.final=0;S.hearts=5;S.finalR=0;S.finalPend=0;hearts();S.scene='market';setBg('market');
 }
-function rank(){const sc=Math.max(0,S.hearts*20-S.hints*5-S.miss*2);return [sc,sc>=95?'S':sc>=75?'A':sc>=50?'B':'C']}
+function rank(){const sc=Math.max(0,S.hearts*20-S.hints*5-S.miss*2+SECN()*3+(S.flags.wuDone?3:0));return [sc,sc>=100?'S':sc>=80?'A':sc>=55?'B':'C']}
 async function goodEnd(){
  S.ended=true;$('#hs').innerHTML='';setBGM('good');SFX.win();
  await chapter('地下儲藏室');
@@ -643,80 +1255,94 @@ async function goodEnd(){
  await say('hai','……小珊……？妳怎麼……在這裡……','broken');
  await N('陳大海靠在陶甕旁，臉色蒼白，但還有呼吸。救護車很快就來了。');
  await say('hai','我只記得……喝了美玲給的烏梅湯，醒來就在這裡了。我一直敲，一直敲……沒有人聽見。','broken');
+ await N('牆壁的水泥縫裡，用圖釘固定著一排小小的紙片。我湊近一看——全是收據的背面：燈籠、推車、戴帽子的老爺爺。每一張，都被人用膠帶，仔細貼平。');
+ await say('hai','……她以為我不知道。她畫的每一張，我都收著。','normal');
+ await say('hai','保留入學的事，我也知道。是我自己，翻到那封通知的。','normal');
+ await say('shan','爸……！','broken');
+ await say('hai','我說「小孩子別管」，是怕妳被大人的事拖住。結果……是我，把妳拖進來了。','broken');
+ if((S.flags.shanArt||0)>=2){await say('shan','姐姐……妳那時候，真的沒有跟他說。','normal');await Me('我說過，我不會說。畫，繼續畫。','sad')}
  await say('li','（紅著眼眶）大海……對不起，我巡了那麼多次，都沒想到要掀開那塊地墊。','normal');
- await chapter('三天後');
- setBg('market','brightness(1.12)');$('#place').textContent='📍 福安夜市';
- await N('莊美玲被依殺人、妨害自由等罪名起訴。那 31 份讓渡書，被證實是冒簽偽造，全數撤銷。');
+ await chapter('第三幕<br>代價');
+ setBg('market','brightness(1.12)');$('#place').textContent='📍 福安夜市';S.flags.act3=1;
+ await N('三天後。莊美玲被依殺人、妨害自由等罪名起訴。那 31 份讓渡書，被證實是冒簽偽造，全數撤銷。');
  await N('自治會重新改選。雲嶺開發的收購案，暫時凍結——福安夜市，保住了。');
- await say('hai','許偵探，來，吃一碗。這次是真的滷肉，不是老滷。','normal');
- await say('shan','謝謝妳。我爸……還有整條夜市，都謝謝妳。','normal');
- await say('an','這次，算我欠妳一次。','normal');
- await say('me','然後呢？你要繼續追雲嶺？');
- await say('an','當然。……但我們各查各的，這是說好的。','normal');
- await say('an','下次見，不要再擋我的路。','normal');
- await say('me','……是你在擋我吧。');
+ await N('可是，夜市裡，沒有一個人，笑得出來。');
+ await N('黃燈籠重新亮起。林嬸坐在攤位後面，面前擺著兩碗豆花。一碗，擺在那張空椅子前面。');
+ await say('lin','美玲那孩子……他們說，她要關很多年。','broken');
+ await say('lin','我還是不敢相信。我膝蓋上，貼的，還是她的貼布。','broken');
+ const dst=domStance();
+ if(dst==='sym'){
+  await say('lin','許小姐，妳坐。坐這張。今天，他不來了。','normal');
+  await N('她把那張空椅子，輕輕拉到我旁邊。我坐下來，把那碗不加配料的豆花，慢慢吃完。');
+  await say('lin','妳那天，跟我說，要陪著我。我後來才知道，那句話，是真的。','normal')}
+ else if(dst==='firm'){
+  await say('lin','許小姐，妳講話，還是那麼大聲。','nervous');
+  await say('lin','可是那天，那些人想拿紙來逼我的時候，是妳，擋在我前面的。……謝謝妳。','normal');
+  await N('她把那份「攤位預約讓渡意向書」，慢慢撕成兩半，再撕成四半。')}
+ else{
+  await say('lin','我請小珊，幫我找了一位律師。紙，簽不簽，我自己決定。','normal');
+  await say('lin','妳那天，沒有叫我趕快決定。……這個，我記著。','normal');
+  await N('她把那份意向書，放進圍裙口袋，拍了兩下。不簽，也不丟。')}
+ await Me('林嬸，豆花，還是不加配料嗎？','normal');
+ await say('lin','（笑）不加。配料，是在欺負豆花。','normal');
+ await chapter('會面室');
+ setBg('office','grayscale(.45) brightness(.7)');$('#place').textContent='📍 看守所．會面室';
+ await N('隔著一片玻璃，莊美玲穿著素色的衣服，頭髮剪短了。');
+ await say('ling','……妳來了。林嬸，還好嗎？','broken');
+ await Me('她說，貼布很好用。');
+ await say('ling','……那就好。','broken');
+ await N('她低著頭，肩膀，輕輕地發抖。');
+ await say('ling','我爸現在，在老人院。我跟他說，我「出遠門」。','broken');
+ await say('ling','我請律師，把一個信封交給妳了。裡面，是 07 號攤位的鑰匙。如果有一天，夜市把攤位還給大家……可不可以，替我把它，放回去？','broken');
+ if(dst==='sym')await Me('我會的。我會告訴他，他的女兒，做過很多好事。也做過，一件不能被原諒的事。','sad');
+ else if(dst==='firm')await Me('我會替妳送到。可是這句話，妳得自己，親口告訴他。','determined');
+ else await Me('我會替妳轉交。其他的，等判決吧。','normal');
+ await N('我把那把小小的鑰匙，收進圍巾的口袋裡。它不重，卻很燙。');
+ setBg('market');$('#place').textContent='';
+ if(S.flags.wuDone)await N('遠處，吳阿嬤戴著那副修好的眼鏡，笑咪咪地，對一個年輕人揮手。');
+ await say('an','……喏。','normal');
+ await Me('這是什麼？');
+ await say('an','妳之前，不是想看我的筆記嗎？只有今天這一頁。','normal');
+ await showDoc('〈周予安的筆記　福安夜市〉\n\n18:40　第一次見到許晴。她緊張的時候，會摸圍巾。\n19:20　她說：線會告訴人，該去看哪裡。我說：線不是證據。\n20:55　她把三樣東西，連成一個人。我說不出她錯在哪，只知道，太快了。\n21:50　她蹲在階梯上，沒有哭。我給了她一罐紅茶。\n23:10　她說：「我錯了。」然後去道歉。\n　　　——我的紀錄裡，從來沒有這一行。\n'+(S.flags.anMom?'\n（另：我媽的店。那晚，我第一次想：也許，可以再開一次。）\n':'')+'\n結論：\n線不是證據。但她的線，會帶人，走到證據。\n（需要再觀察。）');
+ await Me('「需要再觀察」？','normal');
+ await say('an','紀錄，不改。','normal');
+ await say('an','這次，算我欠妳一次。下次見，不要再擋我的路。','normal');
+ await Me('……是你在擋我吧。','normal');
  setPor(null);
  if(S.ev.includes('yunling')){await N('我拿出那張採購名單，看著被撕掉的「收款人」欄。\n雲朵標誌底下，到底是誰，拿走了那一欄？')}
  await N('口袋裡，那張匿名的紙條還在。');
  setPor('me','point');await say('me','……這個字跡。');
  setPor(null);await N('我把紙條摺好，放回口袋。那個人，到底想讓我看見什麼？');
- const [sc,rk]=rank();window.__score={sc,rk,hearts:S.hearts,hints:S.hints,miss:S.miss};try{localStorage.setItem('yeshi_clear','1');const ob=JSON.parse(localStorage.getItem('yeshi_best')||'null');if(!ob||sc>ob.sc)localStorage.setItem('yeshi_best',JSON.stringify({sc,rk,t:Date.now()}));if(S.ev.includes('yunling'))localStorage.setItem('yeshi_cloud','1')}catch(e){}
- await chapter(`GOOD END<br>〈夜市無聲〉<br><span style="font-size:16px">真相：莊美玲提前殺人、用冷凍貨櫃拖延死亡時間，再趁停電嫁禍陳大海</span><br><span style="font-size:18px">❤️ 剩餘心數 ${S.hearts}/5<br>💡 使用提示 ${S.hints} 次　❌ 失誤 ${S.miss} 次<br>分數 ${sc}</span><br><span id="rank" style="font-size:54px;color:#ff5a4a">${rk}</span>`);
+ const [sc,rk]=rank();const STY={sym:'💗 同情型偵探',firm:'🔥 強硬型偵探',calm:'❄️ 冷靜型偵探'}[domStance()];window.__score={sc,rk,hearts:S.hearts,hints:S.hints,miss:S.miss,secrets:SECN(),style:domStance()};try{localStorage.setItem('yeshi_clear','1');const ob=JSON.parse(localStorage.getItem('yeshi_best')||'null');if(!ob||sc>ob.sc)localStorage.setItem('yeshi_best',JSON.stringify({sc,rk,t:Date.now()}));if(S.ev.includes('yunling'))localStorage.setItem('yeshi_cloud','1')}catch(e){}
+ await chapter(`GOOD END<br>〈夜市無聲〉<br><span style="font-size:16px">真相：莊美玲提前殺人、用冷凍貨櫃拖延死亡時間，再趁停電嫁禍陳大海</span><br><span style="font-size:18px">❤️ 剩餘心數 ${S.hearts}/5<br>💡 使用提示 ${S.hints} 次　❌ 失誤 ${S.miss} 次<br>🔑 聽見的祕密 ${SECN()}/5　${STY}<br>分數 ${sc}</span><br><span id="rank" style="font-size:54px;color:#ff5a4a">${rk}</span>`);
  $('#chap').style.display='flex';await sleep(window.__fast?100:2500);$('#chap').style.display='none';
- await N(`🏆 評價：${rk} 級（分數 ${sc}）\n心數 ×20 − 提示 ×5 − 失誤 ×2`);
+ await N(`🏆 評價：${rk} 級（分數 ${sc}）\n心數 ×20 − 提示 ×5 − 失誤 ×2 ＋ 祕密 ×3 ＋ 支線 3\n你的風格：${STY}`);
  await choose([['再玩一次','r','red']]);location.reload();
 }
 /* ---------- prologue ---------- */
 async function prologue(){
  setBg('market','brightness(.45)');setBGM('inv');
- await N('—— 序章 ——\n週六夜裡十點，台北。事務所只剩一盞檯燈。');
- setPor('me','point');await say('me','我叫許晴，偵探。專長是找人、找東西，還有找出謊話。老街那件案子之後，上門的委託就沒停過。');
- await N('電話響了。另一頭，是一個快哭出來的女孩子。');
- await say('shan','請問是許偵探嗎？我叫小珊……我爸爸陳大海，在福安夜市賣滷味。他們說，他殺了自治會的王會長。','nervous');
- await say('shan','可是我爸不會殺人！他從晚上七點多就失蹤了，手機也關機……拜託妳，幫我找到他！','broken');
- await say('me','地址給我。我二十分鐘後到。');
- setPor(null);await N('掛上電話，我才發現門縫底下，多了一張摺成四折的紙條。');
- await N('沒有信封，沒有署名，原子筆的字很工整：\n「福安夜市的案子，別被鑰匙騙了。去看貨櫃鎖上有沒有霜。」');
- setPor('me','point');await say('me','……這個字跡。');
- setPor(null);await N('我盯著紙條看了很久。然後把它摺好，放進外套口袋，什麼也沒說。');
- await getEv('note');
-}
+ await N('—— 序章 ——\n週六傍晚，台北。老街的案子才剛結束，事務所安靜得，連時鐘都有回音。');
+ setPor('me','point');await say('me','我叫許晴，偵探。專長是找人、找東西，還有找出謊話。');
+ setPor(null);await N('桌上，放著一條舊圍巾。左邊比右邊長一點。是我阿嬤織的。');
+ await Me('……阿嬤。今天，我不接案了。','sad');
+ await N('我把圍巾繞上脖子，在筆記本上，寫下一行字：\n「今晚，福安夜市，四十週年。」');
+ await Me('小時候，阿嬤帶我去過一次。去吃一碗豆花吧。','normal');
+ setPor(null)}
 /* ---------- intro ---------- */
 async function intro(){
- $('#title').style.display='none';await prologue();await chapter('第一章<br>夜市無聲');
- setBg('market');SFX.gong();
- await N('週六晚上，福安夜市。這座開了四十年的夜市，今晚燈還亮著，卻一點叫賣聲也沒有。');
- await N('21:40，整座夜市停電三分鐘。燈亮之後，自治會長王仲義，一直沒有出現。');
- await N('22:05，保全剪開了後巷冷凍貨櫃的掛鎖——會長倒在裡面，已經沒有呼吸。');
- await N('貨櫃的鑰匙，在滷味攤老闆陳大海的櫃檯上被找到。而陳大海，從晚上七點多就沒人見過他。');
- await say('shan','許偵探！謝謝妳來……警察只留下保全看守貨櫃，其他人都被圈在夜市裡等筆錄。大家看我的眼神，好像我爸已經是兇手了。','nervous');
- await say('me','先告訴我，警方怎麼說。');
- await say('shan','我認識分局的叔叔，他偷偷告訴我——','normal');
- await getEv('body');await getEv('blackout');
- await say('shan','所以他們認定，是我爸趁停電那三分鐘動手的……','nervous');
- await N('這時，一個背著帆布包的年輕人擠過封鎖線，手裡握著一本筆記本，眼睛直直盯著我。');
- await say('an','妳就是剛到的偵探？……從哪裡來的？','normal');
- await say('me','台北。你呢？');
- await say('an','我在這裡打工，炸雞排攤，兩個月了。倒是妳——這種時候，這麼剛好有人來「幫陳大海」？','normal');
- await say('me','被害人家屬委託。要看我的證件嗎？');
- await say('an','雲嶺開發最近很愛派「顧問」去各個老市場，名片上寫的，都是很好聽的職稱。妳是不是其中一個？','nervous');
- await say('me','我最近對那朵雲過敏。倒是你，一個打工的，怎麼知道這麼多？');
- await say('an','……我剛好聽說的。','nervous');
- await say('me','……我也是。');
- await say('shan','呃，你們兩個……不要吵啦！','nervous');
- await say('an','總之，我也不相信陳大叔是兇手。他請我吃過滷蛋。','normal');
- await say('me','在查清楚你是誰之前，我不會把背對著你。');
- await say('an','彼此彼此。','normal');
- setPor(null);
- await N('🔍 點畫面上發光的地方調查；用下方按鈕跟人說話。\n📒 證物隨時可以在右上角查看；證詞卡關可以按「💡 提示」。');
- S.scene='market';
+ $('#title').style.display='none';await prologue();await chapter('第一幕<br>福安的傍晚');
+ setBg('market');SFX.gong();S.scene='market';
+ await N('18:30。福安夜市。四十年的老夜市，今晚掛滿了紅燈籠，空氣裡有油煙、糖水，和一點點，快要散場的味道。');
+ await N('這一次，我只是個客人。');
+ await N('🔍 點畫面上發光的地方調查；用下方按鈕，跟人說說話。\n📒 證物隨時可以在右上角查看；證詞卡關可以按「💡 提示」。\n（把該認識的人，都認識一遍，再往前走。）');
 }
 const SKEY='yeshi';
 /* ---------- save / load ---------- */
 const SAVE_V=2;let lastSnap=null;
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const SLOTS=['auto','s1','s2','s3'],skey=s=>SKEY+'_'+s;
-function chapName(){return S.flags.final?'最終對質':S.flags.cdDone?'第二章':'第一章'}
+function chapName(){return S.flags.final?'最終對質':S.flags.act2?'第二幕':'第一幕'}
 function snapshot(){if(S.ended||!S.scene||!SC[S.scene])return;
  const H={};if(typeof T!=='undefined')for(const k in T)if(T[k]&&T[k]._h)H[k]=T[k]._h;
  lastSnap={v:SAVE_V,t:Date.now(),chap:chapName(),place:SC[S.scene].name,evn:S.ev.length,hearts:S.hearts,bgm:bgmOn,H,S:JSON.parse(JSON.stringify(S))};
@@ -724,7 +1350,7 @@ function snapshot(){if(S.ended||!S.scene||!SC[S.scene])return;
 function readSlot(s){try{const d=JSON.parse(LS.get(skey(s)));if(!d||d.v!==SAVE_V||!d.S||!Array.isArray(d.S.ev)||!SC[d.S.scene]||typeof d.S.flags!=='object')return null;return d}catch(e){return null}}
 const latest=()=>SLOTS.map(readSlot).filter(Boolean).sort((a,b)=>b.t-a.t)[0]||null;
 const fmtT=t=>new Date(t).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'（台北）';
-function applySave(d){for(const k of Object.keys(S))delete S[k];Object.assign(S,JSON.parse(JSON.stringify(d.S)));S.ended=false;
+function applySave(d){for(const k of Object.keys(S))delete S[k];Object.assign(S,JSON.parse(JSON.stringify(d.S)));S.ended=false;try{migrate()}catch(e){console.error(e)}
  if(typeof T!=='undefined')for(const k in T)if(T[k])T[k]._h=(d.H||{})[k]||0;
  if(typeof d.bgm==='boolean'&&d.bgm!==bgmOn){bgmOn=d.bgm;LS.set(SKEY+'_bgm',bgmOn?'on':'off');if(MB&&AC)MB.gain.value=bgmOn?1:0}
  $('#bgmBtn').textContent=bgmOn?'♪ 開':'♪ 關';$('#evBtn').style.display=S.ev.length?'':'none';
