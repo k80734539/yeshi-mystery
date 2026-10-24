@@ -1,0 +1,636 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>老街迷香</title><!-- build:v13-hub -->
+<style>
+html,body,button,.btn,.hot,#box{touch-action:manipulation}
+#log{position:absolute;inset:0;z-index:12;background:rgba(0,0,0,.9);display:none;flex-direction:column;padding:14px;padding-top:max(14px,env(safe-area-inset-top))}#log h2{color:#f5c26b;text-align:center;margin:4px 0 10px;font-size:20px}#logl{flex:1;overflow:auto;font-size:15px;line-height:1.55;-webkit-overflow-scrolling:touch}#logl p{margin:0 0 10px;white-space:pre-wrap}#logl b{color:#ffd77a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{margin:0;height:100%;background:#000;color:#fff;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;overflow:hidden}
+#app{position:relative;margin:0 auto;height:100%;max-width:56.25vh;overflow:hidden;background:#000}
+#bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity .5s,filter .5s}
+#rain{display:none}
+#por{position:absolute;left:50%;bottom:23%;height:62%;transform:translateX(-50%);transition:opacity .25s,transform .25s;opacity:0;filter:drop-shadow(0 0 12px rgba(0,0,0,.7))}
+#por.on{opacity:1}
+#por.shake{animation:pshake .4s}
+@keyframes pshake{0%,100%{transform:translateX(-50%)}20%{transform:translateX(-56%)}40%{transform:translateX(-44%)}60%{transform:translateX(-53%)}80%{transform:translateX(-47%)}}
+#app.shake{animation:ashake .45s}
+@keyframes ashake{0%,100%{transform:none}25%{transform:translate(-8px,4px)}50%{transform:translate(7px,-5px)}75%{transform:translate(-4px,3px)}}
+#hud{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));background:linear-gradient(#000a,#0000);z-index:5}
+#place{font-weight:bold;letter-spacing:2px;text-shadow:0 2px 4px #000}
+#hearts{font-size:18px}
+.hb{background:#c0392b;border:2px solid #f5c26b;color:#fff;border-radius:18px;padding:6px 12px;font-size:14px;font-weight:bold;margin-left:6px}
+#hs{position:absolute;inset:0;z-index:2}
+.hot{position:absolute;border:2px dashed rgba(255,215,120,.8);border-radius:12px;background:rgba(255,200,80,.12);animation:glow 1.6s infinite;display:flex;align-items:flex-end;justify-content:center}
+.hot span{font-size:12px;background:#000b;padding:2px 6px;border-radius:6px;margin-bottom:-12px;white-space:nowrap}
+.hot.done{border-color:rgba(160,160,160,.5);background:none;animation:none}
+@keyframes glow{50%{background:rgba(255,200,80,.3);box-shadow:0 0 14px #fc6}}
+#box{position:absolute;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));min-height:21%;background:rgba(10,12,30,.88);border:2px solid #f5c26b;border-radius:14px;padding:22px 16px 14px;z-index:6;display:none;font-size:17px;line-height:1.6}
+#name{position:absolute;top:-14px;left:12px;background:#b03a2e;border:2px solid #f5c26b;padding:2px 14px;border-radius:10px;font-weight:bold;font-size:15px}
+#name:empty{display:none}
+#txt{white-space:pre-wrap;min-height:3.2em}
+#txt.test{color:#7fe08a}
+#nxt{position:absolute;right:12px;bottom:6px;animation:bob 1s infinite;color:#f5c26b}
+@keyframes bob{50%{transform:translateY(4px)}}
+#bar{position:absolute;left:0;right:0;bottom:0;display:none;gap:6px;padding:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom));background:linear-gradient(#0000,#000d 30%);z-index:4;flex-wrap:wrap;justify-content:center;pointer-events:none}
+#bar>*{pointer-events:auto}
+.btn{flex:1;min-width:28%;background:linear-gradient(#3a4a8a,#22295a);border:2px solid #f5c26b;color:#fff;border-radius:12px;padding:12px 6px;font-size:16px;font-weight:bold;text-align:center}
+.btn.red{background:linear-gradient(#d0452f,#8a1f14)}
+.btn:active{transform:scale(.96)}
+#tbar{position:absolute;left:8px;right:8px;display:none;gap:6px;z-index:7;flex-wrap:wrap}
+#tbar .r2{flex-basis:calc(50% - 3px)!important;flex-grow:0!important;padding:9px 2px!important;font-size:14px!important;background:#3a3a44}
+#tbar .btn:not(.r2){flex:1 1 calc(25% - 5px)!important}
+#tbar .hint{background:linear-gradient(#b8860b,#6b4a05)}
+.ev.pz{min-height:0;font-size:15px;line-height:1.5;padding:12px}
+#tbar .leave{flex-basis:100%!important;padding:9px 2px!important;font-size:14px!important;background:#3a3a44;opacity:.95}
+#modal{position:absolute;inset:0;background:rgba(0,0,0,.82);z-index:10;display:none;flex-direction:column;padding:14px;padding-top:max(14px,env(safe-area-inset-top))}
+#modal h2{margin:4px 0 10px;color:#f5c26b;font-size:20px;text-align:center}
+#mlist{flex:1;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+.ev{background:#1d2347;border:2px solid #556;border-radius:10px;padding:8px;font-size:14px;min-height:64px}
+.ev b{display:block;color:#ffd77a;margin-bottom:2px;font-size:15px}
+.ev .ic{font-size:26px;float:right}
+.ev.sel{border-color:#f5c26b;background:#3a2f17}
+#mdesc{min-height:80px;background:#0b0f26;border:1px solid #f5c26b;border-radius:10px;padding:10px;margin:10px 0;font-size:14px;line-height:1.55;white-space:pre-wrap}
+#mbtns{display:flex;gap:8px}
+#flash{position:absolute;inset:0;z-index:20;pointer-events:none;display:none;align-items:center;justify-content:center;background:radial-gradient(circle,#fff 0,#ffd 30%,#f90 60%,#a00 100%)}
+#flash div{font-size:min(16vw,9vh);font-weight:900;color:#fff;-webkit-text-stroke:3px #800;text-shadow:0 0 20px #f00,6px 6px 0 #400;transform:rotate(-8deg);animation:pop .6s}
+@keyframes pop{0%{transform:scale(3) rotate(-8deg);opacity:0}40%{transform:scale(.9) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-8deg)}}
+#title{position:absolute;inset:0;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:18%;background:linear-gradient(#0000 30%,#000c)}
+#title h1{font-size:13vw;font-size:min(13vw,7vh);margin:0;letter-spacing:6px;color:#ffe3a0;text-shadow:0 0 18px #f60,0 4px 0 #600}
+#title p{color:#ddd;margin:8px 0 26px;letter-spacing:2px}
+#chap{position:absolute;inset:0;z-index:14;display:none;align-items:center;justify-content:center;background:#000;font-size:26px;letter-spacing:4px;color:#ffe3a0;text-align:center;line-height:1.8}
+.accuse{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;align-content:center}
+.sus{border:2px solid #f5c26b;border-radius:12px;overflow:hidden;background:#1d2347;text-align:center;font-weight:bold;padding-bottom:6px}
+.sus img{width:100%;height:28vh;object-fit:cover;object-position:top}
+
+#title{justify-content:flex-start!important;padding:0!important;background-color:#000!important;background-position:center!important;background-size:cover!important}
+#title:before{content:'';position:absolute;inset:0;background:linear-gradient(#000a 0%,#0000 22%,#0000 45%,#000e 78%);pointer-events:none}
+#title>*{position:relative}
+#title .logo{margin-top:14vh;text-align:center}
+#title .logo .k{font-size:min(15vw,8vh);font-weight:900;letter-spacing:8px;line-height:1.1;color:#fff4d8;-webkit-text-stroke:1px #0006;text-shadow:0 0 22px var(--glow),0 3px 0 #000,0 0 3px #000}
+#title .logo .s{display:inline-block;margin-top:8px;padding:3px 16px;font-size:min(5.5vw,3vh);letter-spacing:10px;color:#fff;background:var(--glow);border-radius:2px;box-shadow:0 2px 10px #0008}
+#title .logo .tag{margin-top:12px;color:#e6e6e6;font-size:14px;letter-spacing:3px;text-shadow:0 1px 4px #000}
+#title .tbtns{margin-top:auto;margin-bottom:11vh;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}
+#title .tbtns .btn{flex:none!important;width:64%!important;margin:0!important;padding:13px 0;font-size:18px}
+#title .ver{position:absolute;right:10px;bottom:8px;font-size:11px;color:#fff8;letter-spacing:1px}
+</style><style id="cx">:root{--gl:#f5c26b;--gl2:#d0843a;--glw:rgba(255,190,90,.45);--bx:rgba(44,24,8,.5);--bxs:rgba(44,24,8,.9);--tc:#6ff0a0;--bt1:#9a5a26;--bt2:#4e2a0e}
+#app #box{background:var(--bxs);border:1.5px solid var(--gl);box-shadow:0 0 16px var(--glw),inset 0 0 22px rgba(255,255,255,.05)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){#app #box{background:var(--bx);-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3)}}
+#app #name{background:linear-gradient(135deg,var(--gl2),var(--gl));border:1px solid rgba(255,255,255,.6);box-shadow:0 0 10px var(--glw);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+#name .chip{display:inline-block;margin-left:8px;padding:0 8px;border-radius:9px;background:rgba(0,0,0,.5);color:var(--tc);font-size:12px;vertical-align:1px;text-shadow:none}
+#app #box.tmode{border-color:var(--tc);box-shadow:0 0 18px rgba(80,240,150,.35),inset 0 0 22px rgba(255,255,255,.05)}
+#txt.test{color:var(--tc)!important;text-shadow:0 0 8px rgba(80,240,150,.3)}
+.kw{color:#ffd54a;text-shadow:0 0 6px #ffb300,0 0 12px rgba(255,179,0,.55);font-weight:bold}
+#app #box.press{animation:bshake .35s}
+@keyframes bshake{0%,100%{transform:none}25%{transform:translateX(-4px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
+#por.zoom{transform:translateX(-50%) scale(1.09);transform-origin:50% 30%}
+#tban{position:absolute;top:calc(54px + env(safe-area-inset-top));left:0;right:0;z-index:5;display:none;text-align:center;pointer-events:none}
+#tban .tb1{display:inline-block;padding:3px 26px;font-weight:900;letter-spacing:6px;color:var(--tc);background:linear-gradient(90deg,transparent,rgba(0,0,0,.7) 20%,rgba(0,0,0,.7) 80%,transparent);text-shadow:0 0 10px rgba(80,240,150,.7);font-size:18px}
+#tban .tb2{font-size:12px;color:#eee;margin-top:2px;text-shadow:0 1px 3px #000,0 0 6px #000}
+#tban .sds{margin-top:6px;display:flex;gap:6px;justify-content:center}
+#tban .sd{min-width:24px;height:22px;line-height:22px;border-radius:11px;font-size:12px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.35);color:#ccc;padding:0 7px}
+#tban .sd.ok{color:#7dffa0}
+#tban .sd.cur{background:var(--tc);color:#08301a;border-color:#fff;font-weight:bold;box-shadow:0 0 8px var(--tc)}
+#burst{position:absolute;inset:0;z-index:21;pointer-events:none;display:none;overflow:hidden}
+#burst .sl{position:absolute;inset:-50%;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0) 0deg 5deg,rgba(255,255,255,.5) 5deg 6deg);-webkit-mask:radial-gradient(circle,transparent 16%,#000 42%);mask:radial-gradient(circle,transparent 16%,#000 42%);animation:slr .75s linear forwards}
+#burst .bb{position:absolute;left:0;right:0;top:37%;height:20%;background:linear-gradient(100deg,transparent 0,var(--gl2) 12%,var(--gl) 88%,transparent);transform:skewY(-6deg);animation:bin .22s ease-out;box-shadow:0 0 30px var(--glw)}
+#burst .bt{position:absolute;left:0;right:0;top:37%;height:20%;display:flex;align-items:center;justify-content:center;font-size:min(15vw,8.5vh);font-weight:900;font-style:italic;letter-spacing:4px;color:#fff;-webkit-text-stroke:2px #1a1030;text-shadow:5px 5px 0 rgba(0,0,0,.6),0 0 18px #fff;transform:skewY(-6deg);animation:tin .34s cubic-bezier(.2,1.4,.4,1)}
+@keyframes bin{from{transform:skewY(-6deg) translateX(-110%)}}
+@keyframes tin{from{transform:skewY(-6deg) translateX(-130%) scale(1.3)}}
+@keyframes slr{from{transform:rotate(0) scale(1.25);opacity:0}30%{opacity:.9}to{transform:rotate(10deg);opacity:.5}}
+#app.shk2{animation:ashk2 .3s}
+@keyframes ashk2{0%,100%{transform:none}30%{transform:translate(-4px,2px)}60%{transform:translate(3px,-2px)}}
+#tbar{gap:8px!important}
+#tbar .btn{border:1px solid rgba(255,255,255,.4)!important;border-radius:14px;background:linear-gradient(180deg,var(--bt1),var(--bt2));box-shadow:0 3px 0 rgba(0,0,0,.5),0 0 10px var(--glw);text-shadow:0 1px 2px #000;min-height:46px;transition:transform .08s,box-shadow .08s;-webkit-tap-highlight-color:transparent}
+#tbar .btn:active{transform:translateY(2px) scale(.97);box-shadow:0 1px 0 rgba(0,0,0,.5),0 0 6px var(--glw)}
+#tbar .btn[data-v=press]{background:linear-gradient(180deg,#8a6bff,#3d2aa6)}
+#tbar .btn[data-v=present]{background:linear-gradient(180deg,#ff6b4a,#a3200f)}
+#tbar .btn.hint{background:linear-gradient(180deg,#e2ab2c,#7a5208)!important}
+#tbar .btn.leave{background:linear-gradient(180deg,#4c4c58,#2a2a33)!important;min-height:38px}
+@media (prefers-reduced-motion:reduce){#burst *,#app #box.press,#app.shk2,#app.shake,#por.shake{animation:none!important}#por{transition:opacity .25s!important}}
+</style>
+<style id="epc">:root{--e1:#ffcc4d;--e2:#e0412f;--e3:#7a1410;--ew:rgba(255,190,60,.6)}
+#modal{background:rgba(6,8,20,.86)}
+@supports ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){#modal{background:rgba(8,10,26,.5);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2)}}
+#modal h2{color:var(--e1);text-shadow:0 0 12px var(--ew);letter-spacing:2px}
+#mlist{grid-template-columns:repeat(3,1fr);gap:10px;padding:4px 2px 10px}
+#mlist .ev{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;min-height:96px;padding:10px 4px 8px;border-radius:14px;border:1.5px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04));box-shadow:0 4px 12px rgba(0,0,0,.35);transition:transform .18s,box-shadow .18s,border-color .18s;-webkit-tap-highlight-color:transparent}
+#mlist .ev .ic{float:none;font-size:34px;line-height:1.1;margin-bottom:6px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+#mlist .ev b{font-size:13.5px;line-height:1.25;color:#fff;margin:0}
+#mlist .ev.sel{transform:translateY(-5px) scale(1.04);border-color:var(--e1);background:linear-gradient(160deg,rgba(255,255,255,.24),rgba(255,255,255,.08));box-shadow:0 0 0 2px var(--e1),0 0 22px var(--ew),0 10px 18px rgba(0,0,0,.45)}
+#mlist .ev.sel b{color:var(--e1)}
+#mdesc{margin:6px 0 8px;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);min-height:44px;line-height:1.5;font-size:14.5px}
+#mbtns{display:flex;gap:10px}#mbtns .btn{min-height:52px;font-size:17px;border-radius:14px}
+#presentBtn{flex:2!important;font-weight:900;font-size:20px!important;letter-spacing:3px;background:linear-gradient(180deg,var(--e2),var(--e3))!important;border:2px solid var(--e1)!important;box-shadow:0 0 16px var(--ew);transition:opacity .2s,transform .15s}
+#presentBtn.rdy{animation:prdy 1.2s infinite}@keyframes prdy{50%{box-shadow:0 0 28px var(--e1)}}
+#ep{position:absolute;inset:0;z-index:30;display:none;overflow:hidden;pointer-events:auto;contain:strict}
+#ep.on{display:block}#ep>*{position:absolute;pointer-events:none}
+#ep .fl{inset:0;background:#fff;opacity:0}
+#ep.p1 .fl{animation:efl .35s ease-out}@keyframes efl{0%{opacity:1}100%{opacity:0}}
+#ep .sl{left:50%;top:50%;width:180vmax;height:180vmax;margin:-90vmax 0 0 -90vmax;opacity:0;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.0) 0 5deg,var(--e1) 5deg 6.2deg,rgba(255,255,255,0) 6.2deg 11deg,rgba(255,255,255,.85) 11deg 11.6deg);-webkit-mask:radial-gradient(circle,transparent 14%,#000 40%);mask:radial-gradient(circle,transparent 14%,#000 40%);will-change:transform}
+#ep.p1 .sl{opacity:.75;animation:esl 1.8s linear}@keyframes esl{to{transform:rotate(25deg) scale(1.15)}}
+#ep .bg{inset:0;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.1),var(--e3) 70%);opacity:0;transition:opacity .15s}
+#ep.p1 .bg{opacity:.8}
+#ep .ci{left:0;right:0;top:14%;height:34%;transform:translateX(-110%) skewY(-6deg);background:linear-gradient(90deg,var(--e3),var(--e2) 55%,var(--e1));border-top:4px solid #fff;border-bottom:4px solid #fff;overflow:hidden;box-shadow:0 0 30px var(--ew)}
+#ep .ci img{position:absolute;left:4%;top:-8%;height:150%;transform:skewY(6deg);filter:drop-shadow(6px 0 0 rgba(0,0,0,.35))}
+#ep .ci i{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.0) 0 22px,rgba(255,255,255,.18) 22px 24px)}
+#ep.p1 .ci{animation:eci .28s cubic-bezier(.2,1.3,.4,1) forwards}@keyframes eci{to{transform:translateX(0) skewY(-6deg)}}
+#ep.p3 .ci{animation:eco .25s ease-in forwards}@keyframes eco{from{transform:translateX(0) skewY(-6deg)}to{transform:translateX(110%) skewY(-6deg)}}
+#ep .tx{left:0;right:0;top:40%;text-align:center;opacity:0}
+#ep .tx b{display:inline-block;font-size:min(17vw,10vh);font-weight:900;font-style:italic;color:#fff;letter-spacing:-2px;padding:.08em .35em;-webkit-text-stroke:3px var(--e3);paint-order:stroke fill;text-shadow:0 0 18px var(--e1),5px 6px 0 var(--e3),8px 10px 0 rgba(0,0,0,.6);background:linear-gradient(100deg,transparent 2%,var(--e2) 6%,var(--e1) 50%,var(--e2) 92%,transparent 98%);clip-path:polygon(0 18%,6% 8%,30% 14%,52% 2%,80% 10%,100% 0,97% 40%,100% 82%,74% 92%,50% 100%,22% 90%,3% 96%,1% 60%);transform:rotate(-7deg)}
+#ep.p2 .tx{animation:etx .3s cubic-bezier(.3,1.6,.5,1) forwards}@keyframes etx{0%{opacity:0;transform:scale(3.2)}60%{opacity:1;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+#ep.p3 .tx{animation:etxo .2s forwards}@keyframes etxo{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-40%) scale(.8)}}
+#ep .cd{left:50%;top:30%;width:150px;margin-left:-75px;padding:16px 10px 12px;text-align:center;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(230,230,245,.9));color:#222;box-shadow:0 0 0 3px var(--e1),0 0 40px var(--e1);opacity:0;transform:translate(120px,260px) scale(.3) rotate(20deg)}
+#ep .cd .ic{display:block;font-size:56px}#ep .cd b{display:block;font-size:17px;margin-top:6px}
+#ep.p3 .cd{animation:ecd .38s cubic-bezier(.2,1.4,.4,1) forwards}@keyframes ecd{to{opacity:1;transform:none}}
+#ep .st{left:5%;right:5%;top:62%;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.7);border:1.5px solid var(--e1);color:#eee;font-size:16px;line-height:1.55;opacity:0;transition:opacity .2s}
+#ep .st em{font-style:normal;color:#fff;background:linear-gradient(transparent 55%,var(--e2) 55%);padding:0 2px;text-shadow:0 0 8px var(--e1)}
+#ep.p3 .st{opacity:1}#ep.p3 .st em{animation:ekw .6s .15s 2}@keyframes ekw{50%{color:var(--e1);text-shadow:0 0 16px var(--e1)}}
+#ep .tap{right:10px;bottom:10px;font-size:12px;color:rgba(255,255,255,.7)}
+#ep.climax .ci{top:10%;height:40%}#ep.climax .tx b{font-size:min(19vw,11vh)}
+#ep.climax.p1 .sl{opacity:1}
+#app.shk3{animation:ashk3 .5s}@keyframes ashk3{0%,100%{transform:none}15%{transform:translate(-14px,8px)}30%{transform:translate(12px,-10px)}45%{transform:translate(-9px,6px)}60%{transform:translate(7px,-4px)}80%{transform:translate(-3px,2px)}}
+#por.tilt{animation:ptilt .55s}@keyframes ptilt{0%,100%{transform:translateX(-50%)}20%{transform:translateX(-58%) rotate(-6deg)}45%{transform:translateX(-44%) rotate(5deg)}70%{transform:translateX(-52%) rotate(-2deg)}}
+#por.smug{animation:psmug .6s ease-out}@keyframes psmug{0%{transform:translateX(-50%)}40%{transform:translateX(-50%) scale(1.04) rotate(2deg)}100%{transform:translateX(-50%)}}
+#ep.wr{background:rgba(200,0,20,.0)}#ep.wr .rd{inset:0;background:radial-gradient(circle,rgba(255,40,40,.15),rgba(170,0,10,.7));animation:erd .7s ease-out forwards}@keyframes erd{0%{opacity:0}20%{opacity:1}100%{opacity:.25}}
+#ep .x{left:0;right:0;top:30%;text-align:center;font-size:min(40vw,24vh);font-weight:900;color:#ff3b3b;-webkit-text-stroke:4px #fff;text-shadow:0 0 30px #f00;opacity:0}
+#ep.wr .x{animation:ex .4s cubic-bezier(.3,1.6,.5,1) forwards}@keyframes ex{0%{opacity:0;transform:scale(2.5) rotate(-20deg)}100%{opacity:1;transform:none}}
+#ep .hbk{left:50%;top:9%;width:80px;margin-left:-40px;text-align:center;font-size:58px;opacity:0}
+#ep .hbk span{display:inline-block}
+#ep.wr.hl .hbk{opacity:1}#ep.wr.hl .hbk .a{animation:hba .7s .25s forwards}#ep.wr.hl .hbk .b{animation:hbb .7s .25s forwards}
+@keyframes hba{to{transform:translate(-26px,40px) rotate(-35deg);opacity:0}}@keyframes hbb{to{transform:translate(26px,44px) rotate(35deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){#ep *,#ep.on *{animation:none!important;transition:none!important}#ep.p1 .ci,#ep.p2 .ci{transform:skewY(-6deg)}#ep.p2 .tx,#ep.p3 .cd{opacity:1;transform:none}#ep.p3 .ci,#ep.p3 .tx{opacity:0}#ep.p1 .sl{opacity:.4}#ep.wr .x,#ep.wr .rd{opacity:1}#ep.wr.hl .hbk .b{opacity:0}#app.shk3,#por.tilt,#por.smug{animation:none!important}#mlist .ev{transition:none}#presentBtn.rdy{animation:none}}
+</style>
+<style id="mpc">#docv{position:absolute;inset:0;z-index:25;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);padding:18px}#docv .pp{width:100%;max-width:340px;background:linear-gradient(170deg,#f4ecd8,#ddd0b0);color:#2b2418;border-radius:6px;padding:18px 18px 14px;box-shadow:0 10px 30px rgba(0,0,0,.6);font-size:15px;line-height:1.65;text-align:center}#docv .lg{margin:0 auto 4px;width:120px;height:80px;background:#1f2a3c;border-radius:10px;display:flex;align-items:center;justify-content:center}#docv h3{margin:6px 0 2px;font-size:20px;letter-spacing:4px}#docv .bd{text-align:left;white-space:pre-line;margin-top:8px;border-top:1px dashed #8a7a5a;padding-top:8px}#docv .tp{margin-top:10px;font-size:12px;color:#6a5a3a}</style>
+</head><body><div id="app">
+<div id="bg"></div><canvas id="rain"></canvas>
+<img id="por" alt="">
+<div id="hs"></div>
+<div id="hud"><div id="place"></div><div><span id="hearts"></span><button class="hbk" id="logBtn" style="background:#2a3a6a">📜 回顧</button><button class="hb" id="bgmBtn" style="background:#2a3a6a">♪ 開</button><button class="hb" id="evBtn" style="display:none">📒 證物</button></div></div>
+<div id="bar"></div>
+<div id="tbar"></div><div id="tban"></div><div id="docv"><div class="pp"><div class="lg"><svg viewBox="0 0 120 80" width="120" height="80" aria-label="雲嶺開發標誌"><g fill="none" stroke="#c9d6e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M28 50a14 14 0 0 1 4-27a20 20 0 0 1 36-6a16 16 0 0 1 24 14a12 12 0 0 1-2 19z"/><path d="M22 66l22-18l14 10l14-14l26 22" stroke="#8fa3bf"/></g></svg></div><h3>雲嶺開發</h3><div class="bd"></div><div class="tp">點一下關閉</div></div></div><div id="ep"><div class="bg"></div><div class="sl"></div><div class="fl"></div><div class="rd"></div><div class="ci"><i></i><img alt=""></div><div class="tx"><b>就是這個！</b></div><div class="cd"></div><div class="st"></div><div class="x">✗</div><div class="hbk"><span class="a">💔</span></div><div class="tap">點一下跳過 ▶</div></div><div id="burst"><div class="sl"></div><div class="bb"></div><div class="bt">追問！</div></div>
+<div id="box"><div id="name"></div><div id="txt"></div><div id="nxt">▼</div></div>
+<div id="modal"><h2 id="mtitle"></h2><div id="mlist"></div><div id="mdesc"></div><div id="mbtns"></div></div>
+<div id="log"><h2>📜 對話回顧</h2><div id="logl"></div><button class="btn" id="logClose" style="flex:none;margin-top:10px">關閉</button></div><div id="flash"><div id="flasht">就是這個！</div></div>
+<div id="chap"></div>
+<div id="title" style="--glow:#c46a12"><a id="hubLink" href="https://k80734539.github.io/detective-files/" style="position:absolute;top:calc(10px + env(safe-area-inset-top));left:10px;z-index:30;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:14px;text-decoration:none">📁 事務所</a><div class="logo"><div class="k">老街迷香</div><div class="tag">颱風夜．百年糕餅店的謎</div></div><div class="tbtns" id="tbtns"><button class="btn red" id="startBtn">開始調查</button></div><div class="ver">v1.8</div></div>
+</div>
+<script>
+const ART=/*ART*/{};
+const $=s=>document.querySelector(s);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* ---------- audio ---------- */
+let AC=null,rainNode=null;
+function ac(){if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();}if(AC.state==='suspended')AC.resume();if(!bgmCur)setBGM('inv');return AC}
+function tone(f,d,type='square',v=.05,slide=0){if(!AC)return;if(v>.03)duck();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;if(slide)o.frequency.exponentialRampToValueAtTime(slide,AC.currentTime+d);g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+d)}
+function noise(d,v=.3,f=1000){if(!AC)return;duck();const b=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate),c=b.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=(Math.random()*2-1)*(1-i/c.length);const s=AC.createBufferSource();s.buffer=b;const fl=AC.createBiquadFilter();fl.frequency.value=f;const g=AC.createGain();g.gain.value=v;s.connect(fl).connect(g).connect(AC.destination);s.start()}
+function startRain(){}
+const SFX={shock:()=>{noise(.3,.5,900);tone(90,.45,'sawtooth',.14,40);setTimeout(()=>tone(1400,.25,'square',.05,300),60)},buzz:()=>{tone(140,.5,'square',.12,110);tone(147,.5,'sawtooth',.09,115);setTimeout(()=>tone(96,.35,'square',.1),260)},blip:()=>tone(620+Math.random()*80,.04,'square',.02),
+ get:()=>{tone(660,.12,'triangle',.12);setTimeout(()=>tone(880,.12,'triangle',.12),110);setTimeout(()=>tone(1320,.25,'triangle',.12),220)},
+ obj:()=>{noise(.5,.5,2500);tone(180,.5,'sawtooth',.15,90);setTimeout(()=>{tone(523,.15,'square',.1);tone(659,.15,'square',.08)},150);setTimeout(()=>{tone(784,.4,'square',.1);tone(1046,.4,'square',.07)},300)},
+ wrong:()=>{tone(200,.3,'sawtooth',.12,90);setTimeout(()=>tone(120,.4,'sawtooth',.12,60),200)},
+ tap:()=>tone(900,.05,'sine',.06),
+ thunder:()=>noise(1.8,.6,300),
+ press:()=>{if(!AC)return;noise(.35,.35,3500);tone(330,.18,'square',.05,990);setTimeout(()=>tone(1320,.12,'triangle',.07),120)},
+ sad:()=>{[523,466,392,349].forEach((f,i)=>setTimeout(()=>tone(f,.5,'triangle',.08),i*350))},
+ win:()=>{[523,659,784,1046,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.3,'triangle',.1),i*160))}};
+/* ---------- BGM (procedural) ---------- */
+let MB=null,DK=null,bgmOn=localStorage.getItem('laojie_bgm')!=='off',bgmCur=null,bgmT=null,step=0,nextT=0;const TH={};
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+function duck(){if(!DK)return;const t=AC.currentTime;DK.gain.cancelScheduledValues(t);DK.gain.setTargetAtTime(.35,t,.02);DK.gain.setTargetAtTime(1,t+.35,.25)}
+function mInit(){if(MB)return;DK=AC.createGain();MB=AC.createGain();MB.gain.value=bgmOn?1:0;DK.connect(MB).connect(AC.destination);
+ for(const k of ['inv','test','final']){const g=AC.createGain();g.gain.value=0;g.connect(DK);TH[k]={g}}
+ nextT=AC.currentTime+.1;bgmT=setInterval(sched,40)}
+function note(th,m,t,d,type,v,o={}){const c=AC,os=c.createOscillator(),g=c.createGain();os.type=type;os.frequency.setValueAtTime(mtof(m),t);
+ if(o.slide)os.frequency.setValueAtTime(mtof(m-1),t),os.frequency.linearRampToValueAtTime(mtof(m),t+.08);
+ let n=os;if(o.lp){const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=o.lp;os.connect(f);n=f}
+ if(o.vib){const l=c.createOscillator(),lg=c.createGain();l.frequency.value=5.5;lg.gain.value=mtof(m)*.012;l.connect(lg).connect(os.frequency);l.start(t);l.stop(t+d+.3)}
+ const a=o.a||.005;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);
+ if(o.sus){g.gain.setValueAtTime(v,t+d*.7);g.gain.linearRampToValueAtTime(0,t+d)}else g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ n.connect(g).connect(TH[th].g);os.start(t);os.stop(t+d+.05)}
+function drum(th,t,kind,v){const c=AC;if(kind==='k'){const o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(40,t+.15);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.connect(g).connect(TH[th].g);o.start(t);o.stop(t+.25);return}
+ const len=kind==='s'?.15:.04,b=c.createBuffer(1,c.sampleRate*len,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+ const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type=kind==='s'?'bandpass':'highpass';f.frequency.value=kind==='s'?1800:7000;const g=c.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+len);s.connect(f).connect(g).connect(TH[th].g);s.start(t)}
+// melodies: midi or 0 rest, one entry per 8th note
+const INV={bpm:66,lead:[74,0,72,69,67,0,69,0, 72,0,74,0,69,0,0,0, 67,0,69,72,74,0,77,74, 72,0,69,0,67,0,0,0, 69,0,67,64,62,0,64,0, 67,0,69,0,72,0,69,67, 62,0,0,0,64,67,69,0, 62,0,0,0,0,0,0,0],
+ chords:[[50,57,62],[48,55,60],[46,53,58],[45,52,57]]};
+const TST={bpm:96,bass:[45,45,45,46,45,45,48,46],stab:[69,0,0,70,0,0,69,0, 0,0,72,0,70,0,69,0]};
+const FIN={bpm:138,bass:[40,40,52,40,43,43,55,43,45,45,57,45,47,47,59,47],lead:[76,0,76,79,0,76,74,0, 72,0,71,0,72,74,0,0, 76,0,76,79,0,81,79,0, 83,0,81,79,76,0,0,0, 72,0,72,74,0,76,74,72, 71,0,67,0,71,74,0,0, 76,79,81,0,79,76,74,0, 76,0,0,0,0,0,0,0]};
+function sched(){if(!AC||!bgmCur)return;while(nextT<AC.currentTime+.15){play8(bgmCur,step,nextT);const bpm={inv:INV,test:TST,final:FIN}[bgmCur].bpm;nextT+=30/bpm;step++}}
+function play8(th,s,t){const e=30/{inv:INV,test:TST,final:FIN}[th].bpm;
+ if(th==='inv'){const ch=INV.chords[Math.floor(s/16)%4];// guitar arpeggio
+  const ar=[0,1,2,1];note(th,ch[ar[s%4]]+12,t,1.2,'triangle',.06,{lp:2000});if(s%16===0)ch.forEach(m=>note(th,m,t,e*16,'sine',.025,{a:.8,sus:1}));
+  const m=INV.lead[s%INV.lead.length];if(m)note(th,m,t,e*2.6,'sawtooth',.045,{lp:1500,vib:1,a:.09,sus:1,slide:1})}
+ else if(th==='test'){const b=TST.bass[s%8];note(th,b,t,e*.9,'sawtooth',.07,{lp:500});if(s%2)drum(th,t,'h',.05);
+  const m=TST.stab[s%16];if(m)note(th,m,t,e*.6,'square',.035,{lp:2200});if(s%32===0)note(th,57,t,e*32,'sine',.03,{a:1,sus:1})}
+ else {const b=FIN.bass[s%16];note(th,b,t,e*.8,'sawtooth',.08,{lp:900});if(s%4===0)drum(th,t,'k',.5);if(s%4===2)drum(th,t,'s',.25);drum(th,t,'h',.04);
+  const m=FIN.lead[s%FIN.lead.length];if(m)note(th,m,t,e*1.5,'square',.04,{lp:3500,vib:1})}}
+function setBGM(k){if(!AC)return;mInit();if(k===bgmCur)return;const t=AC.currentTime;
+ for(const n in TH){TH[n].g.gain.cancelScheduledValues(t);TH[n].g.gain.setValueAtTime(TH[n].g.gain.value,t);TH[n].g.gain.linearRampToValueAtTime(n===k?(n==='final'?.8:1):0,t+1.5)}
+ if(k&&bgmCur!==k&&!(bgmCur&&k))step=0;bgmCur=k;window.__bgm=k}
+function toggleBGM(){bgmOn=!bgmOn;localStorage.setItem('laojie_bgm',bgmOn?'on':'off');if(MB)MB.gain.setTargetAtTime(bgmOn?1:0,AC.currentTime,.1);$('#bgmBtn').textContent=bgmOn?'♪ 開':'♪ 關'}
+
+/* ---------- rain ---------- */
+const rc=$('#rain'),rx=rc.getContext('2d');let drops=[];
+function rsize(){rc.width=rc.clientWidth;rc.height=rc.clientHeight;drops=Array.from({length:90},()=>({x:Math.random()*rc.width,y:Math.random()*rc.height,s:8+Math.random()*10}))}
+addEventListener('resize',rsize);
+let rainOn=false;/*rain removed*/
+(function rl(){rx.clearRect(0,0,rc.width,rc.height);if(rainOn){rx.strokeStyle='rgba(180,200,255,.35)';rx.lineWidth=1;rx.beginPath();for(const d of drops){rx.moveTo(d.x,d.y);rx.lineTo(d.x-3,d.y+d.s);d.y+=d.s*1.2;d.x-=2;if(d.y>rc.height){d.y=-20;d.x=Math.random()*rc.width*1.2}}rx.stroke()}requestAnimationFrame(rl)})();
+/* ---------- state ---------- */
+const S={ev:[],flags:{},hearts:5,scene:null,hints:0,miss:0};
+window.__G=S;window.__fast=false;
+const CH={jie:'阿傑',lan:'秀蘭姨',lin:'林先生',yu:'小雨',me:'我',doc:'醫院',bnb:'民宿老闆娘',fu:'阿福伯'};
+const EV={
+ yunling:{ic:'☁️',n:'雲嶺開發的名片',d:'林先生掉在街口的名片。\n抬頭是一個雲朵形狀的標誌：【雲嶺開發】土地開發部 特約顧問。\n背面寫著：「福記 32 坪，限月底前簽約——上面交代，價錢不是問題」。\n（他不只是普通的買家……）'},
+ clock:{ic:'🕰️',n:'停電時間',d:'老街口的電子鐘停在【20:40】。\n颱風把電線吹斷，整條街從 20:40 開始停電，一直到半夜才恢復。'},
+ rust:{ic:'🚪',n:'倉庫鐵門的鐵鏽',d:'倉庫後門是一扇生鏽的老鐵門，從巷子也進得來。門很重，一定要用手推門板才推得開。\n摸過的地方會沾上【橘紅色的鐵鏽】，擦都擦不掉。\n👉 阿傑的右手掌心，也沾著一模一樣的【橘紅色鐵鏽】。'},
+ cake:{ic:'🍠',n:'吃一半的芋粿',d:'阿福伯倒下時手裡握著的。裡面是【甜的芋泥內餡】（福記的芋粿是鹹的），外皮很軟。\n包裝紅紙上貼著一張小貼紙：「台北．芋見甜點」。\n醫院在裡面驗出了安眠藥。'},
+ fuki:{ic:'🥮',n:'福記的芋粿',d:'福記的祖傳芋粿是【鹹的】，加紅蔥頭跟蝦米，煎得外皮焦香。\n小雨說：福記從來不做甜芋粿。而且阿福伯有糖尿病，平常不吃甜的。'},
+ ledger:{ic:'📖',n:'茶行帳本',d:'秀蘭姨的手寫帳本。\n・每個月一號：「福記 阿福 來店裡拿凍頂一斤、坐著聊天　免錢」（記了【30 年】，上個月 1 號也有）\n・昨晚：「【20:50】停電 點蠟燭　民宿 林先生 買凍頂半斤 現金」← 停電後有【1 位客人】'},
+ cuff:{ic:'👔',n:'林先生的袖口',d:'林先生白襯衫的右手袖口上，有一小塊【橘紅色的污漬】。\n他說是「咖啡」，但用手指一搓，掉下來的是【橘紅色的鏽粉】——跟福記倉庫鐵門的鐵鏽一樣。咖啡是褐色的。'},
+ gift:{ic:'🎁',n:'林先生的伴手禮',d:'林先生說他從台北帶伴手禮來分給街坊。\n秀蘭姨的櫃檯上就有一盒，紅紙包裝，貼著「台北．芋見甜點」的貼紙。她一口都沒吃。'},
+ cctv:{ic:'📹',n:'民宿監視器',d:'民宿門口的監視器有裝電池，停電也照錄。\n・【20:45】（停電後 5 分鐘）林先生撐傘出門，手上提著一個紅紙盒。\n・21:25　林先生回來，全身濕透，【手上空空的】。'},
+ book:{ic:'📕',n:'祖傳配方本',d:'藏在倉庫鬆動磚塊後面的舊本子。\n裡面夾著一張阿福伯親筆寫的遺囑草稿：\n「福記店面與配方，交給我的【外孫女——小雨】。」\n還有一張老照片：年輕的女兒抱著一個綁紅緞帶的小女孩。\n👉 遺囑還在＝福記不能賣。阿福伯倒下、遺囑被拿走，能賣店的就只剩阿傑。'},
+ hosp:{ic:'🏥',n:'醫院報告',d:'阿福伯陷入昏睡，驗出大量安眠藥。\n幸好發現得早，【沒有生命危險】，但還要一兩天才會醒。'}
+};
+/* ---------- dialogue ---------- */
+const box=$('#box'),txt=$('#txt'),nm=$('#name'),por=$('#por');
+let waiter=null,skip=false;
+box.addEventListener('click',()=>{ac();if(typing){skip=true}else if(waiter){const w=waiter;waiter=null;SFX.tap();w()}});
+let typing=false;
+function setPor(c,e='normal',fx){if(!c){por.classList.remove('on');por.dataset.c='';return}const src=ART[c+'_'+e];if(por.dataset.k!==c+e){por.src=src;por.dataset.k=c+e}por.dataset.c=c;por.classList.add('on');if(fx){por.classList.remove('shake');void por.offsetWidth;por.classList.add('shake')}}
+const LOG=[];function onTap(el,fn){let tt=0;el.addEventListener('touchend',ev=>{ev.preventDefault();tt=Date.now();fn(ev)},{passive:false});el.addEventListener('click',ev=>{if(Date.now()-tt<700)return;fn(ev)})}
+async function say(who,t,e,opt={}){
+ if(!opt.test){LOG.push([who?(CH[who]||who):'',t]);if(LOG.length>60)LOG.shift()}
+ box.style.display='block';const nmT=(who?(CH[who]||who):'')+(opt.tag||'');if(opt.chip){nm.textContent=nmT;const cp=document.createElement('span');cp.className='chip';cp.textContent=opt.chip;nm.appendChild(cp)}else nm.textContent=nmT;txt.className=opt.test?'test':'';
+ box.classList.toggle('tmode',!!opt.test);box.classList.remove('press');if(opt.press){void box.offsetWidth;box.classList.add('press')}
+ if(who&&ART[who+'_normal'])setPor(who,e||'normal',opt.shake);
+ typing=true;skip=false;txt.textContent='';const vt=t.replace(/[【】]/g,'');
+ for(let i=0;i<vt.length;i++){if(skip||window.__fast){txt.innerHTML=rt(t,1e9);break}txt.innerHTML=rt(t,i+1);if(i%2==0&&vt[i]!=' ')SFX.blip();await sleep(vt[i]==='…'||vt[i]==='。'?90:28)}
+ typing=false;$('#nxt').style.display='block';
+ if(opt.noWait)return;
+ await new Promise(r=>waiter=r);
+}
+const N=(t,o)=>say('',t,null,o);
+function rt(t,n){let h='',c=0,k=false;const E={'&':'&amp;','<':'&lt;','>':'&gt;'};for(const ch of t){if(ch==='【'){if(!k){h+='<b class="kw">';k=true}continue}if(ch==='】'){if(k){h+='</b>';k=false}continue}if(c>=n)break;h+=E[ch]||ch;c++}return h+(k?'</b>':'')}
+async function burst(){const b=$('#burst');b.style.display='none';void b.offsetWidth;b.style.display='block';SFX.press();const a=$('#app');a.classList.remove('shk2');void a.offsetWidth;a.classList.add('shk2');await sleep(window.__fast?40:720);b.style.display='none'}
+function tban(r,title,i){const b=$('#tban');if(!r){b.style.display='none';return}b.style.display='block';const P=r._p||{};b.innerHTML='<div class="tb1">— 證言 —</div><div class="tb2"></div><div class="sds">'+r.lines.map((_,j)=>`<span class="sd${j===i?' cur':''}${P[j]?' ok':''}">${j+1}${P[j]?' ✓':''}</span>`).join('')+'</div>';b.querySelector('.tb2').textContent=title.replace(/^.*?證詞[：:]?\s*/,'')||title}
+function hideBox(){box.style.display='none'}
+setTimeout(()=>{$('#title').style.backgroundImage=`url(${ART.bg_street})`});function setBg(k,filter=''){$('#bg').style.backgroundImage=`url(${ART['bg_'+k]})`;$('#bg').style.filter=filter}
+async function flash(t='就是這個！'){$('#flasht').textContent=t;const f=$('#flash');f.style.display='flex';SFX.obj();$('#app').classList.remove('shake');void $('#app').offsetWidth;$('#app').classList.add('shake');await sleep(window.__fast?50:1100);f.style.display='none'}
+async function chapter(t){const c=$('#chap');c.innerHTML=t;c.style.display='flex';await sleep(window.__fast?50:1800);c.style.display='none'}
+async function getEv(k){if(S.ev.includes(k))return;S.ev.push(k);SFX.get();$('#evBtn').style.display='';await N(`📒 證物【${EV[k].n}】已加入筆記本。`)}
+function hearts(){$('#hearts').textContent=S.flags.final?'❤️'.repeat(S.hearts)+'🖤'.repeat(5-S.hearts):''}
+/* ---------- evidence modal ---------- */
+function evModal(title,presentable){return new Promise(res=>{
+ const m=$('#modal');m.style.display='flex';$('#mtitle').textContent=title;let sel=null;
+ const L=$('#mlist');L.innerHTML='';
+ S.ev.forEach(k=>{const d=document.createElement('div');d.className='ev';d.dataset.k=k;d.innerHTML=`<span class="ic">${EV[k].ic}</span><b>${EV[k].n}</b>`;d.onclick=()=>{SFX.tap();sel=k;[...L.children].forEach(x=>x.classList.toggle('sel',x===d));$('#mdesc').textContent=EV[k].d;if(pb){pb.style.opacity=1;pb.classList.add('rdy')}};L.appendChild(d)});
+ $('#mdesc').textContent=presentable?'選一個證物，然後按「出示」。':'點一下證物看詳細內容。';
+ const B=$('#mbtns');B.innerHTML='';let pb=null;
+ if(presentable){pb=document.createElement('button');pb.className='btn red';pb.id='presentBtn';pb.textContent='出示！';pb.type='button';pb.style.opacity=.5;pb.onclick=()=>{if(!sel)return;m.style.display='none';res(sel)};B.appendChild(pb)}
+ const cb=document.createElement('button');cb.className='btn';cb.id='closeBtn';cb.textContent='返回';cb.onclick=()=>{SFX.tap();m.style.display='none';res(null)};B.appendChild(cb);
+})}
+$('#bgmBtn').textContent=bgmOn?'♪ 開':'♪ 關';$('#bgmBtn').onclick=e=>{e.stopPropagation();ac();toggleBGM()};
+onTap($('#logBtn'),e=>{e.stopPropagation();ac();$('#logl').innerHTML=LOG.map(([n,t])=>`<p>${n?`<b>${n}</b>　`:''}${t.replace(/</g,'&lt;')}</p>`).join('')||'<p>還沒有對話。</p>';$('#log').style.display='flex';const l=$('#logl');l.scrollTop=l.scrollHeight});onTap($('#logClose'),()=>{$('#log').style.display='none'});
+$('#evBtn').onclick=()=>{ac();if(!busyModal)evModal('證物筆記本',false)};let busyModal=false;
+/* ---------- choice ---------- */
+function choose(opts){hideBox();setPor(null);return new Promise(res=>{const b=$('#bar');b.innerHTML='';b.style.display='flex';opts.forEach(([label,val,cls])=>{const x=document.createElement('button');x.className='btn '+(cls||'');x.textContent=label;x.dataset.v=val;x.onclick=()=>{ac();SFX.tap();b.style.display='none';res(val)};b.appendChild(x)})})}
+/* ---------- testimony / cross-exam ---------- */
+// round: {who, lines:[{t,e,press:[[who,t,e]...]}], answer:{i, ev:[...]}, onWrong}
+const WHERE={rust:'後倉庫的鐵門',ledger:'秀蘭茶行的櫃檯',book:'後倉庫的牆',cctv:'老街口的山城民宿',cuff:'跟林先生聊聊',cake:'後倉庫的地上',gift:'秀蘭茶行'};
+function missHint(r){if(r.answer.ev.some(k=>S.ev.includes(k)))return null;return `（好像還缺關鍵證據，先去別處調查看看。提示：${WHERE[r.answer.ev[0]]||'到處看看'}）`}
+async function useHint(r){
+ r._h=r._h||0;
+ if(r._h<2){r._h++;S.hints++;window.__hints=S.hints}
+ const L=r.lines[r.answer.i];
+ if(r._h===1)await N(`💡 提示 1：注意第 ${r.answer.i+1} 句——「${L.t}」\n${r.hint[0]}`);
+ else {const e=r.answer.ev.map(k=>EV[k].n).join('】或【');await N(`💡 提示 2：在第 ${r.answer.i+1} 句出示【${e}】。\n${r.hint[1]}`);const h=missHint(r);if(h)await N(h)}
+}
+
+const KWS=["碰都沒碰過", "從來沒踏進我店裡", "一個客人都沒有", "沒有任何親戚關係", "一步都沒離開民宿", "鹹芋粿", "有什麼好處"];const RM=matchMedia('(prefers-reduced-motion: reduce)');
+function epWait(ms,st){return new Promise(r=>{if(st.skip||window.__fast)return r();const t=setTimeout(r,ms*(window.__epSlow||1));st.k=()=>{clearTimeout(t);r()}})}
+function epOpen(cls){const e=$('#ep');e.className='';void e.offsetWidth;e.className='on '+cls;const st={skip:false};onTap0(e,()=>{st.skip=true;st.k&&st.k()});return [e,st]}
+function onTap0(el,fn){el.ontouchend=ev=>{ev.preventDefault();fn()};el.onclick=fn}
+function epShake(){if(RM.matches)return;const a=$('#app');a.classList.remove('shk3','shake','shk2');void a.offsetWidth;a.classList.add('shk3')}
+function stinger(){if(!AC)return;[[392,0],[523,90],[659,180],[784,270],[1046,380]].forEach(([f,d])=>setTimeout(()=>{tone(f,.5,'sawtooth',.06);tone(f/2,.6,'square',.05)},d));setTimeout(()=>noise(.8,.4,1800),380)}
+async function epHit(who,k,L,climax){
+ hideBox();$('#tbar').style.display='none';
+ const [e,st]=epOpen('p1'+(climax?' climax':''));
+ e.querySelector('.ci img').src=ART['me_point']||'';
+ e.querySelector('.tx b').textContent=climax?'就是這個！！':'就是這個！';
+ e.querySelector('.cd').innerHTML=`<span class="ic">${EV[k].ic}</span><b>${EV[k].n}</b>`;
+ const t=L.t.replace(/[【】]/g,'');const kw=KWS.find(x=>t.includes(x));
+ const esc=x=>x.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+ e.querySelector('.st').innerHTML='<small style="color:var(--e1)">▲ 矛盾</small><br>「'+(kw?esc(t).replace(esc(kw),'<em>'+esc(kw)+'</em>'):'<em>'+esc(t)+'</em>')+'」';
+ SFX.obj();if(climax)stinger();
+ await epWait(climax?220:140,st);e.classList.add('p2');epShake();
+ await epWait(climax?820:560,st);e.classList.add('p3');SFX.get&&SFX.get();
+ await epWait(climax?700:560,st);
+ e.className='';setPor(who,climax?'broken':'nervous',true);por.classList.remove('tilt');void por.offsetWidth;if(!RM.matches)por.classList.add('tilt');SFX.shock();epShake();
+ await sleep(window.__fast?20:(st.skip?120:260));por.classList.remove('tilt');
+}
+async function epMiss(who,heart){
+ hideBox();$('#tbar').style.display='none';
+ const [e,st]=epOpen('wr'+(heart?' hl':''));SFX.buzz();epShake();
+ if(heart){S.hearts--;hearts()}
+ await epWait(heart?820:600,st);e.className='';
+ setPor(who,'normal');por.classList.remove('smug');void por.offsetWidth;if(!RM.matches)por.classList.add('smug');
+}
+function showDoc(t){return new Promise(r=>{const d=$('#docv');d.querySelector('.bd').textContent=t;d.style.display='flex';SFX.blip&&SFX.blip();const c=()=>{d.style.display='none';d.ontouchend=d.onclick=null;r()};setTimeout(()=>{d.ontouchend=e=>{e.preventDefault();c()};d.onclick=c},window.__fast?0:250)})}
+async function crossExam(who,title,r){try{return await cx0(who,title,r)}finally{tban(null);box.classList.remove('tmode','press');por.classList.remove('zoom')}}
+async function cx0(who,title,r){
+ let i=0;setBGM(S.flags.final?'final':'test');
+ await N(`—— ${title} ——\n（點「追問」逼問細節，發現矛盾就按「出示」證物！卡關可按「💡 提示」，或「✖ 離開」先去調查。）`);
+ {const h=missHint(r);if(h)await N(h)}
+ while(true){
+  const L=r.lines[i];
+  hideBox();tban(r,title,i);por.classList.remove('zoom');
+  await say(who,`「${L.t}」`,L.e||'normal',{test:true,noWait:true,chip:`證言 ${i+1}/${r.lines.length}${(r._p||{})[i]?' ✓':''}`});
+  const tb=$('#tbar');
+  const v=await new Promise(res=>{tb.innerHTML='';tb.style.display='flex';tb.style.bottom=(box.offsetHeight+18)+'px';
+   let done=false;[['◀ 上一句','prev'],['🔍 追問','press'],['📒 出示','present','red'],['下一句 ▶','next'],[`💡 提示${r._h>=2?'（已全開）':r._h?'（再一次）':''}`,'hint','r2 hint'],[S.flags.final?'✖ 先撤退（保留心數）':'✖ 離開，先去調查','leave','r2 leave']].forEach(([l,val,c])=>{const x=document.createElement('button');x.type='button';x.className='btn '+(c||'');x.dataset.act=val;x.style.minWidth='0';x.style.flex=1;x.style.padding='14px 2px';x.style.fontSize='15px';x.textContent=l;x.dataset.v=val;onTap(x,()=>{if(done)return;done=true;ac();SFX.tap();tb.style.display='none';res(val)});tb.appendChild(x)})});
+  if(v==='leave'){hideBox();setPor(null);await N(S.flags.final?'（先撤退整理線索。心數會保留，準備好再按「⚖️ 指認兇手」繼續對質。）':`（先離開，晚點再找${CH[who]}談。）`);return 'leave'}
+  if(v==='hint'){await useHint(r);continue}
+  if(v==='prev'){i=(i-1+r.lines.length)%r.lines.length;continue}
+  if(v==='next'){i++;if(i>=r.lines.length){i=0;await N('（證詞又繞回第一句了。哪一句跟證物對不上？）')}continue}
+  if(v==='press'){(r._p=r._p||{})[i]=1;tban(r,title,i);hideBox();await burst();for(const p of (L.press||[[who,'……就是這樣，沒什麼好說的。']])){const me=p[0]===who;por.classList.toggle('zoom',me);await say(p[0],p[1],p[2]||(me?'nervous':undefined),{press:true})}por.classList.remove('zoom');continue}
+  if(v==='present'){busyModal=true;const k=await evModal('要出示哪一個證物？',true);busyModal=false;if(!k)continue;
+   if(i===r.answer.i&&r.answer.ev.includes(k)){await epHit(who,k,L,!!S.flags.final&&/4\/4/.test(title));return k}
+   S.miss++;await epMiss(who,!!S.flags.final);
+   await say(who,r.wrongLine||'……你拿這個出來是想說什麼？跟我說的話根本沒有矛盾啊。','normal');
+   if(S.flags.final){if(S.hearts<=0)return 'dead';await N(`（判斷失誤，信用剩下 ${S.hearts} 顆心……）`)}
+   else await N(missHint(r)||'（好像不對……再看看證詞跟證物哪裡對不上。卡住可以按「💡 提示」。）');
+  }
+ }
+}
+const T={
+ J:{lines:[
+   {t:'停電的時候我在二樓打電動，沒電了就直接躺著睡了。',press:[['me','停電是幾點？'],['jie','我哪知道，【八點多】吧？反正螢幕突然就黑了。']]},
+   {t:'我整晚都沒下樓，倉庫那扇生鏽的鐵門，我的手碰都沒碰過。',press:[['me','你確定？一次都沒碰過？'],['jie','你很煩欸！那扇破鐵門髒死了，我碰都不想碰。','nervous'],['me','（他一直把【右手】藏在背後……）']]},
+   {t:'是小雨九點半發現爺爺倒下的，我才被她叫醒。',press:[['jie','她哭著衝上樓，我才知道出事了。'],['yu','（小雨在旁邊默默點頭。）']]}],
+   answer:{i:1,ev:['rust']},hint:['他說手「碰都沒碰過」鐵門。他的「手」上有什麼顏色？','鐵門一推就沾【橘紅色鐵鏽】，阿傑的右手掌心正好有一樣的鏽。']},
+ L1:{lines:[
+   {t:'我跟福記那個死老頭，四十年沒講過一句話，他也從來沒踏進我店裡。',press:[['lan','從年輕吵到老，見面就轉頭。'],['me','（說得斬釘截鐵……）']]},
+   {t:'他家的配方，我才不稀罕。我們賣茶的，要糕餅配方幹嘛？',press:[['lan','我家的茶比他家的糕好賣多了。']]},
+   {t:'昨晚一停電我就拉下鐵門，整晚一個客人都沒有。',press:[['lan','颱風天誰會出門買茶？瘋了才會。'],['me','（真的一個都沒有嗎……？先問清楚她跟【福記的關係】。）']]}],
+   answer:{i:0,ev:['ledger']},hint:['「四十年沒講過話」——有什麼東西記錄著他們「每個月」見面？','茶行帳本：30 年來每個月一號，阿福伯都來店裡拿茶、坐著聊天。']},
+ L2:{lines:[
+   {t:'昨晚 20:40 一停電我就拉下鐵門，之後一個客人都沒有。',press:[['lan','我記錯了嗎……？']]},
+   {t:'我整晚都在店裡點蠟燭記帳，哪裡都沒去。',press:[['lan','這個你可以問隔壁，他們看得到我的【燭光】。']]}],
+   answer:{i:0,ev:['ledger']},hint:['「一個客人都沒有」——她自己記帳時，停電後寫了什麼？','帳本最新一頁：20:50 停電後，民宿的林先生來買了凍頂半斤。']},
+ Y:{lines:[
+   {t:'我是兩年前來當學徒的。跟阿福伯……沒有任何親戚關係。',press:[['yu','我是看到【徵人啟事】來的。阿福伯對我很好。','nervous']]},
+   {t:'九點半我煮了薑茶要送去倉庫，就看到阿福伯倒在地上了。',press:[['yu','他手裡還緊緊握著那塊【芋粿】……','nervous']]},
+   {t:'那塊芋粿不是我們店裡的，我不知道是哪裡來的。',press:[['yu','店裡沒有人會做【甜的】芋粿。']]}],
+   answer:{i:0,ev:['book']},wrongLine:'這、這個跟我有什麼關係……',hint:['「沒有任何親戚關係」——有沒有文件寫著小雨跟阿福伯的關係？','倉庫磚塊後的配方本，遺囑寫著「交給我的外孫女——小雨」。']},
+ F1:{title:'林先生的反駁 1',lines:[{t:'我說過了，20:40 停電之後我一步都沒離開民宿。',press:[['lin','颱風天誰要出去淋雨？']]},{t:'整條街都停電，黑成那樣，誰能證明我出去過？',press:[['lin','沒有證據就別亂講。']]}],answer:{i:0,ev:['cctv','ledger']},hint:['「一步都沒離開」——停電後幾點，有東西拍到或記到他？','民宿監視器有電池：20:45 他提紅紙盒出門。茶行帳本 20:50 也記著他。']},
+ F2:{title:'林先生的反駁 2',lines:[{t:'我只是去對面茶行買半斤茶，根本沒靠近福記。',press:[['lin','你可以去問秀蘭姨，我確實有【買茶】。']]},{t:'福記的倉庫在哪我都不知道，那扇鐵門我碰都沒碰過。',press:[['lin','我又不是這條街的人。']]}],answer:{i:1,ev:['cuff','rust']},hint:['他袖口那塊「咖啡漬」是什麼顏色？','袖口是【橘紅色】、會掉鏽粉——跟倉庫鐵門的鐵鏽一樣，不是咖啡。']},
+ F3:{title:'林先生的反駁 3',lines:[{t:'他手上那塊是福記自己做的鹹芋粿吧？安眠藥是誰放的，誰知道。',press:[['lin','說不定是那個【孫子】放的啊。']]},{t:'我帶去的只是茶葉，什麼吃的都沒帶。',press:[['lin','你看我像會做糕餅的人嗎？']]}],answer:{i:0,ev:['cake','gift']},hint:['那塊芋粿是「鹹」的還是「甜」的？包裝上貼著什麼？','阿福伯手上是【甜芋泥】，貼著「台北．芋見甜點」——跟林先生的伴手禮一樣。']},
+ F4:{title:'林先生的最後反駁',lines:[{t:'他倒下對我有什麼好處？我還要跟他談買賣耶！',press:[['lin','我是生意人，害他只會讓生意更難談。']]},{t:'要賣店的是他孫子，跟我又沒關係。',press:[['lin','我只是個【買家】而已。']]}],answer:{i:0,ev:['book']},hint:['阿福伯「倒下」之後，誰能決定賣不賣福記？有什麼文件擋著？','遺囑把福記留給小雨——阿福伯昏睡、遺囑被拿走，阿傑就能把店賣給他。']}
+};
+/* ---------- scenes ---------- */
+const SC={
+ street:{name:'老街口',bg:'street',hots:[
+  {id:'clock',x:56,y:35,w:14,h:10,l:'老時鐘',f:async()=>{await N('街口的老電子鐘，數字停在 20:40 不動了。');await N('停電那一刻，時間就停在這裡。');await getEv('clock')}},
+  {id:'bnb',x:37,y:19,w:28,h:17,l:'山城民宿',f:async()=>{
+   if(!S.flags.lanDone){await say('bnb','颱風天客人都在房間啦，你要找林先生就在門口那邊。');return}
+   if(S.ev.includes('cctv')){await say('bnb','監視器的檔案都給你看過了喔。');return}
+   await say('bnb','監視器？有啦，我們門口那支有裝電池，停電也照錄。');await say('bnb','你看……20:45 林先生撐傘出去，手上提一個紅紙盒；21:25 才回來，淋得跟落湯雞一樣，手上空空的。');await getEv('cctv')}},
+  {id:'card',x:38,y:76,w:28,h:9,l:'地上的名片',f:async()=>{await N('民宿門口的積水旁，掉著一張被踩過的名片。');await showDoc('雲嶺開發股份有限公司\n土地開發部\u3000特約顧問\n林\u3000志遠\n\n（背面手寫）\n福記：地坪 32 坪\u3000限月底前簽約\n——上面交代，價錢不是問題');await say('lin','啊，那是我的……還給我。','nervous');await say('lin','……我也只是跑腿的。上面的人催得很緊，月底前談不成，我自己也不好過。','nervous');await getEv('yunling');try{localStorage.setItem('laojie_cloud','1')}catch(e){}}},
+  {id:'shopdoor',x:2,y:42,w:34,h:32,l:'往福記',f:()=>go('shop')},
+  {id:'teadoor',x:74,y:40,w:25,h:35,l:'往茶行',f:()=>go('tea')}],
+  people:['lin']},
+ shop:{name:'福記糕餅',bg:'shop',hots:[
+  {id:'fuki',x:4,y:66,w:50,h:18,l:'芋頭糕',f:async()=>{await N('櫃檯上的芋粿煎得金黃，聞起來有紅蔥頭的香味。');await say('yu','這是福記的祖傳芋粿，是鹹的喔。我們家從來不做甜的。','normal');await say('yu','而且阿福伯有糖尿病，醫生叫他不能吃甜的……他自己也很少碰。','nervous');await getEv('fuki')}},
+  {id:'photo',x:25,y:11,w:24,h:21,l:'老照片',f:async()=>{await N('牆上掛著福記歷代的老照片。');await N('其中一張是年輕的阿福伯跟一個女孩的合照，但女孩的臉被貼紙遮住了。');await say('jie','那是我姑姑。很久以前跟爺爺吵架離家出走，就再也沒回來了。','normal')}},
+  {id:'storedoor',x:58,y:30,w:28,h:30,l:'往倉庫',f:()=>go('store')},
+  {id:'out',x:60,y:76,w:38,h:9,l:'回老街',f:()=>go('street')}],
+  people:['jie','yu']},
+ store:{name:'後倉庫',bg:'store',hots:[
+  {id:'door',x:37,y:14,w:40,h:54,l:'生鏽鐵門',f:async()=>{await N('倉庫後門，一扇生鏽的老鐵門，直通外面的小巷。');await N('門很重，我用手推了一下——手掌馬上沾滿橘紅色的鐵鏽，擦都擦不掉。');await N('想從這扇門進出，手或袖子一定會沾到鏽。');await N('……等等，剛才阿傑的右手掌心，也是這種橘紅色。');await getEv('rust')}},
+  {id:'cake',x:49,y:71,w:24,h:13,l:'芋粿',f:async()=>{await N('地上那塊芋粿，就是阿福伯倒下時緊握著的。');await N('咬開的地方露出紫色的……甜芋泥？外皮軟軟的，不像煎過。');await N('包裝紅紙上有張貼紙：「台北．芋見甜點」。');await getEv('cake');await getEv('hosp')}},
+  {id:'brick',x:79,y:36,w:16,h:8,l:'鬆動的磚',f:async()=>{await N('牆上有一塊磚是鬆的……挖開，裡面藏著一本泛黃的本子！');await N('「福記祖傳配方」。裡面還夾著一張紙跟一張老照片。');await getEv('book')}},
+  {id:'stool',x:74,y:63,w:25,h:17,l:'倒下的凳子',f:async()=>{await N('翻倒的板凳。阿福伯大概是坐著吃東西，睡意一上來就整個人倒下去了。');await N('現場沒有打鬥的痕跡。')}},
+  {id:'back',x:2,y:76,w:40,h:9,l:'回店裡',f:()=>go('shop')}],
+  people:[]},
+ tea:{name:'秀蘭茶行',bg:'tea',hots:[
+  {id:'ledger',x:20,y:70,w:60,h:16,l:'帳本',f:async()=>{await N('櫃檯上攤開一本手寫帳本，字跡很工整。');await N('翻到前面……每個月一號都寫著：「福記 阿福 凍頂一斤　免錢」。一寫就是三十幾年。');await N('最新一頁：「20:50 停電 點蠟燭　民宿 林先生 買凍頂半斤 現金」。');await getEv('ledger')}},
+  {id:'giftbox',x:57,y:58,w:24,h:11,l:'紅紙盒',f:async()=>{await N('櫃檯角落放著一盒沒拆的點心，紅紙包裝。');await N('貼紙寫著：「台北．芋見甜點」。');await say('lan','那個建商送的啦，說是台北帶來的伴手禮。誰要吃他的東西。','normal');await getEv('gift')}},
+  {id:'out',x:1,y:69,w:18,h:14,l:'回老街',f:()=>go('street')}],
+  people:['lan']}
+};
+let curHots=null;
+function renderScene(){setBGM('inv');const sc=SC[S.scene];$('#place').textContent='📍 '+sc.name;const H=$('#hs');H.innerHTML='';
+ sc.hots.forEach(h=>{const d=document.createElement('div');d.className='hot'+(S.flags['h_'+h.id]?' done':'');d.dataset.id=h.id;Object.assign(d.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});d.innerHTML=`<span>${h.l}</span>`;d.onclick=()=>act(async()=>{S.flags['h_'+h.id]=1;await h.f()});H.appendChild(d)});
+ const b=$('#bar');b.innerHTML='';b.style.display='flex';
+ sc.people.forEach(p=>{const x=document.createElement('button');x.className='btn';x.dataset.talk=p;x.textContent='💬 '+CH[p];x.onclick=()=>act(()=>talk(p));b.appendChild(x)});
+ if(canAccuse()){const x=document.createElement('button');x.className='btn red';x.id='accuseBtn';x.textContent='⚖️ 指認兇手';x.onclick=()=>act(accuse);b.appendChild(x)}
+ setPor(null);hideBox();
+}
+let busy=false;
+async function act(fn){if(busy)return;ac();busy=true;$('#hs').style.visibility='hidden';$('#bar').style.display='none';try{await fn()}finally{busy=false;$('#hs').style.visibility='';if(!S.ended)renderScene()}}
+async function go(k){S.scene=k;setBg(SC[k].bg);SFX.tap()}
+const canAccuse=()=>S.flags.jieDone&&S.flags.lanDone&&S.flags.yuDone&&S.ev.includes('cctv')&&S.ev.includes('book')&&(S.ev.includes('cake')||S.ev.includes('gift'))&&(S.ev.includes('cuff')||S.ev.includes('rust'));
+/* ---------- talks ---------- */
+async function talk(p){
+ if(p==='lin'){
+  if(!S.flags.linMet){S.flags.linMet=1;
+   await say('lin','哎呀，偵探先生。颱風天還要辦案，辛苦了。','normal');
+   await say('lin','我是宏築建設的林，昨天才從台北上來。阿福伯的事我也很難過。','normal');
+   await say('lin','我還特地帶了台北的伴手禮來分給街坊，大家都很喜歡呢。','normal');
+   await say('lin','停電那晚？我一整晚都待在民宿房間，一步都沒出去。','normal');
+   await N('……他拿手機的右手袖口，沾著一小塊橘紅色的污漬。');
+   await say('lin','這個？喝咖啡不小心沾到的啦。','nervous');await N('（咖啡是褐色的……這塊卻是橘紅色，還會掉粉。）');
+   await getEv('cuff');return}
+  if(canAccuse()){await say('lin','偵探先生，還有事嗎？颱風停了我就要回台北囉。','normal');await N('（證據應該夠了。準備好就按「⚖️ 指認兇手」。）');return}
+  await say('lin','我說過了，我整晚都在民宿。你去問別人吧。','normal');
+  const need=[];if(!S.flags.jieDone)need.push('阿傑');if(!S.flags.lanDone)need.push('秀蘭姨');if(!S.flags.yuDone)need.push('小雨');
+  const miss=[];if(!S.ev.includes('cctv'))miss.push('老街口的民宿');if(!S.ev.includes('book'))miss.push('後倉庫的牆');if(!S.ev.includes('cake')&&!S.ev.includes('gift'))miss.push('後倉庫地上的芋粿');
+  await N('（要指認兇手還不夠。'+(need.length?'還沒問完：'+need.join('、')+'。':'')+(miss.length?'還沒查過：'+miss.join('、')+'。':'')+'）');return}
+ if(p==='jie'){
+  if(S.flags.jieDone){await say('jie','爺爺一定會醒來的……我想親口跟他道歉。','nervous');return}
+  if(!S.flags.jieMet){S.flags.jieMet=1;await say('jie','……你就是那個偵探？我先說，不是我。','normal');await say('jie','對啦，我是想把店賣給建商。這破店一年賺不到幾個錢，爺爺年紀那麼大了。','normal');await say('jie','前天我們大吵一架，整條街都聽到了。所以大家都在懷疑我，對吧？','nervous')}
+  const k=await crossExam('jie','阿傑的證詞：那一晚',T.J);
+  if(k==='leave')return;
+  await say('me','你說你沒進過倉庫？那你的右手掌心，為什麼沾著倉庫鐵門那種橘紅色的鐵鏽！');
+  await say('jie','唔……！','broken',{shake:true});
+  await say('jie','……好啦！我去過！但那是停電【之前】，八點二十左右。','broken');
+  await say('jie','我想偷拿地契去給建商看……結果被爺爺抓到，又吵了一架。','nervous');
+  await say('jie','我甩門出去的時候，爺爺還好好的！他還說「等一下林先生要來，你不要在這裡丟臉」。','nervous');
+  await N('阿福伯在等林先生……？而且阿傑說他沒碰過甜的芋粿。這條線索要記住。');
+  S.flags.jieDone=1;return}
+ if(p==='lan'){
+  if(S.flags.lanDone){await say('lan','民宿老闆娘門口有監視器，你去問她看看。','normal');return}
+  if(!S.flags.lanMet){S.flags.lanMet=1;await say('lan','福記的事問我幹嘛？我們兩家是死對頭，整條街誰不知道。','normal');await say('lan','外面都在傳我偷了他的配方，笑死人。','normal')}
+  if(!S.flags.lan1){const k=await crossExam('lan','秀蘭姨的證詞：福記跟我',T.L1);
+  if(k==='leave')return;S.flags.lan1=1;
+  await say('me','四十年沒講過話？那帳本上為什麼 30 年來每個月一號都寫著「福記 阿福 來店裡拿凍頂一斤、坐著聊天」！上個月也有！');
+  await say('lan','你、你偷看人家帳本！','broken',{shake:true});
+  await say('lan','……唉。我們年輕的時候是一起學手藝的師兄妹。吵架是做給街坊看的，習慣了。','broken');
+  await say('lan','他每個月來拿茶，順便聊天。他說他找到失散的外孫女了……就在店裡。','nervous');
+  await N('……還有一件事。她說「整晚沒有客人」，但帳本上寫著——');}
+  const k2=await crossExam('lan','秀蘭姨的證詞：昨晚',T.L2);
+  if(k2==='leave')return;
+  await say('me','帳本上寫著：「20:50　民宿 林先生 買凍頂半斤」！');
+  await say('lan','啊……對齁！我忘了，那個建商有來。','nervous',{shake:true});
+  await say('lan','停電後十分鐘吧，他全身溼答答跑來買茶，很奇怪，還問我「福記倉庫的後門是不是從巷子就進得去」。','nervous');
+  await say('lan','民宿老闆娘門口有裝監視器，你去問她。','normal');
+  S.flags.lanDone=1;return}
+ if(p==='yu'){
+  if(S.flags.yuDone){await say('yu','阿福伯……外公他，一定會沒事的。','nervous');return}
+  if(!S.flags.yuMet){S.flags.yuMet=1;await say('yu','偵、偵探先生好……我是店裡的學徒，小雨。','nervous');await say('yu','是我發現阿福伯倒在倉庫的……我到現在手還在抖。','nervous')}
+  const k=await crossExam('yu','小雨的證詞',T.Y);
+  if(k==='leave')return;
+  await say('me','沒有親戚關係？那這本配方本裡的遺囑，為什麼寫著「交給我的外孫女——小雨」！');
+  await say('yu','……！','broken',{shake:true});
+  await say('yu','……照片裡抱著我的，是我媽媽。她二十年前跟外公吵架離家，去年生病走了。','broken');
+  await say('yu','外公找到我以後，讓我來店裡當學徒，說要等他七十大壽，再跟大家說……','broken');
+  await say('yu','他說，只要遺囑還在，福記就不會被賣掉。','nervous');
+  await say('jie','……小雨是我表妹？爺爺要把店留給她？','nervous');
+  await N('如果阿福伯倒下、遺囑消失……能賣掉福記的，就只剩阿傑了。\n而一直想買下這排老屋的人是——');
+  S.flags.yuDone=1;return}
+}
+/* ---------- accusation & finale ---------- */
+async function pickModal(title,opts){setPor(null);hideBox();return new Promise(res=>{const m=$('#modal');m.style.display='flex';$('#mtitle').textContent=title;const L=$('#mlist');L.innerHTML='';L.style.gridTemplateColumns='1fr';$('#mdesc').textContent='選一個答案。';const B=$('#mbtns');B.innerHTML='';
+ opts.forEach(([t,v])=>{const d=document.createElement('div');d.className='ev pz';d.dataset.v=v;d.textContent=t;onTap(d,()=>{SFX.tap();m.style.display='none';L.style.gridTemplateColumns='';res(v)});L.appendChild(d)})})}
+async function lose(){S.hearts--;S.miss++;hearts();SFX.wrong();$('#app').classList.remove('shake');void $('#app').offsetWidth;$('#app').classList.add('shake');if(S.hearts<=0){await badEnd('hearts');return true}await N(`（推理錯誤……信用剩下 ${S.hearts} 顆心。）`);return false}
+async function accuse(){
+ if(S.finalPend){S.finalPend=0;await N(`繼續跟林先生對質。（信用剩下 ${S.hearts} 顆心）`);S.flags.final=1;hearts();setBGM('final');return finale()}
+ S.flags.final=1;S.hearts=5;S.finalR=0;hearts();setBGM('final');
+ await N('所有線索都到手了。🧩 推理拼圖——把真相拼起來吧。（答錯會扣一顆心，可以重來）');
+ while(true){const v=await new Promise(res=>{const m=$('#modal');m.style.display='flex';$('#mtitle').textContent='① 誰讓阿福伯吃下安眠藥？';const L=$('#mlist');L.innerHTML='';L.className='accuse';
+  ['jie','lan','lin','yu'].forEach(c=>{const d=document.createElement('div');d.className='sus';d.dataset.c=c;d.innerHTML=`<img src="${ART[c+'_normal']}"><div>${CH[c]}</div>`;onTap(d,()=>{SFX.tap();m.style.display='none';L.className='';res(c)});L.appendChild(d)});
+  $('#mdesc').textContent='想清楚再選。';$('#mbtns').innerHTML=''});
+  if(v==='lin')break;await say(v,'我……不是我！你搞錯了！','broken',{shake:true});if(await lose())return}
+ while(true){const h=await pickModal('② 怎麼做到的？',[['停電時從福記大門闖進去，硬灌阿福伯安眠藥','a'],['帶著摻了安眠藥的「台北．芋見甜點」甜芋粿，從巷子推開倉庫生鏽鐵門進去，送給阿福伯','b'],['在秀蘭茶行的凍頂茶葉裡下藥，讓阿福伯喝下','c']]);if(h==='b')break;await N('（不對……想想阿福伯手上那塊甜芋粿，和袖口的鐵鏽。）');if(await lose())return}
+ while(true){const y=await pickModal('③ 為什麼要這麼做？',[['阿福伯欠他一大筆錢','a'],['想偷走福記的祖傳配方，自己開店','b'],['想讓阿福伯昏睡、拿走遺囑，讓阿傑能把福記賣給他，完成整排老屋的收購','c']]);if(y==='c')break;await N('（不對……想想配方本裡的遺囑，和他一直想買下的老屋。）');if(await lose())return}
+ await flash('真相拼起來了！');
+ await say('me','林先生——讓阿福伯昏倒在倉庫的人，就是你！');
+ await say('lin','哈，偵探先生，你在開玩笑吧？','normal');
+ return finale()}
+async function finale(){
+ const R=[T.F1,T.F2,T.F3,T.F4];const AF=[async()=>{await say('me','民宿的監視器有裝電池！20:45 你提著紅紙盒出門，21:25 才空手回來！');await say('lin','唔……！','nervous',{shake:true});await say('lin','好、好吧，我是出去了一下。但我只是去茶行買茶而已！','nervous')},async()=>{await say('me','不知道倉庫在哪？那你右手袖口上的橘紅色污漬，是什麼？一搓就掉橘色鏽粉——');await say('me','那根本不是咖啡，是倉庫後門的鐵鏽！你還問過秀蘭姨後門怎麼走！');await say('lin','這、這……','nervous',{shake:true});await say('lin','就算我去找阿福伯談生意好了！他自己吃了芋粿睡著，干我什麼事！','nervous')},async()=>{await say('me','福記的芋粿是鹹的，從來不做甜的！');await say('me','阿福伯手裡那塊是甜芋泥，包裝上貼著「台北．芋見甜點」——跟你送給街坊的伴手禮一模一樣！');await say('lin','…………！','nervous',{shake:true});await say('lin','就……就算是我送的又怎樣！我幹嘛要害一個老人家？','nervous')},async()=>{await say('me','好處可大了。阿福伯寫了遺囑，要把福記交給外孫女小雨。');await say('me','只要他昏睡、你趁機拿走遺囑，能決定賣店的就只剩阿傑——你的收購案就能成了！');await say('me','可惜你在倉庫翻了半天，沒想到遺囑就藏在磚塊後面的配方本裡！')}];
+ for(let j=S.finalR||0;j<R.length;j++){const r=R[j];const k=await crossExam('lin',`最終對質 ${j+1}/4：${r.title}`,r);if(k==='dead')return badEnd('hearts');if(k==='leave'){S.finalR=S.finalR||0;S.flags.final=0;S.finalPend=1;hearts();return}await AF[j]();S.finalR=j+1}
+ S.finalR=0;
+ await flash('真相大白！');
+ await say('lin','啊啊啊啊啊——！！','broken',{shake:true});
+ await say('lin','……我只是想讓他睡一下而已！整排老屋只差福記一間……公司說這個月再收不到，我就完了……','broken');
+ return goodEnd();
+}
+async function badEnd(v){
+ S.ended=true;$('#hs').innerHTML='';$('#bar').style.display='none';setBGM(null);SFX.sad();
+ setBg('street','grayscale(.8) brightness(.6)');
+ if(v==='hearts'){await say('lin','偵探先生，沒證據就別亂咬人。我的律師會跟你聯絡。','normal');}
+ else {await say(v,'我……不是我！你搞錯了！','broken',{shake:true});await N(`${CH[v]}被帶走了。但真正的兇手，正在一旁冷笑。`)}
+ setPor(null);
+ await N('幾個月後，福記的招牌被拆了下來。\n老街上，再也聞不到紅蔥頭芋粿的香味……');
+ await chapter('BAD END<br>〈散去的香氣〉');
+ const c=await choose([['回到指認前','retry','red'],['從頭開始','restart']]);
+ S.ended=false;
+ if(c==='restart')return location.reload();
+ S.flags.final=0;S.hearts=5;S.finalR=0;S.finalPend=0;hearts();S.scene="street";setBg('street');
+}
+function rank(){const sc=Math.max(0,S.hearts*20-S.hints*5-S.miss*2);return [sc,sc>=95?'S':sc>=75?'A':sc>=50?'B':'C']}
+async function goodEnd(){
+ S.ended=true;$('#hs').innerHTML='';setBGM('inv');SFX.win();
+ await chapter('兩天後');
+ setBg('shop','brightness(1.15)');$('#place').textContent='📍 醫院歸來．福記';
+ await N('颱風走了。醫院打電話來：阿福伯醒了。');
+ await say('jie','爺爺……對不起。我不會再說要賣店了。','broken');
+ await say('yu','外公……','broken');
+ await say('fu','（阿福伯笑著摸摸兩個孫子的頭）傻孩子，以後福記就交給你們兩個了。');
+ await say('lan','哼，死老頭命真硬。……我帶了你最愛的凍頂，快喝。','nervous');
+ await say('yu','偵探先生，這是福記的芋粿，鹹的喔！謝謝你。','normal');
+ setPor(null);
+ await N('林先生被帶走時，口袋裡滑出一張名片，落在我腳邊。');
+ await showDoc('雲嶺開發股份有限公司\n土地開發部　特約顧問\n林　志遠');
+ setPor('me','point');await say('me','雲朵形狀的標誌……雲嶺開發。');
+ await say('me','這個標誌……我好像在哪裡看過。');
+ await N('——阿嬤當年那份賣店的合約上，好像也印著一朵雲。');
+ setPor(null);
+ const [sc,rk]=rank();window.__score={sc,rk,hearts:S.hearts,hints:S.hints,miss:S.miss};try{localStorage.setItem('laojie_clear','1');const ob=JSON.parse(localStorage.getItem('laojie_best')||'null');if(!ob||sc>ob.sc)localStorage.setItem('laojie_best',JSON.stringify({sc,rk,t:Date.now()}));if(S.ev.includes('yunling'))localStorage.setItem('laojie_cloud','1')}catch(e){}
+ await chapter(`GOOD END<br>〈老街迷香〉<br><span style="font-size:16px">真相：林先生送了摻安眠藥的甜芋粿</span><br><span style="font-size:18px">❤️ 剩餘心數 ${S.hearts}/5<br>💡 使用提示 ${S.hints} 次　❌ 失誤 ${S.miss} 次<br>分數 ${sc}</span><br><span id="rank" style="font-size:54px;color:#ff5a4a">${rk}</span>`);
+ $('#chap').style.display='flex';await sleep(window.__fast?100:2500);$('#chap').style.display='none';
+ await N(`🏆 評價：${rk} 級（分數 ${sc}）\n心數 ×20 − 提示 ×5 − 失誤 ×2`);
+ await choose([['再玩一次','r','red']]);location.reload();
+}
+/* ---------- prologue ---------- */
+async function prologue(){
+ setBg('street','brightness(.6)');setBGM('inv');
+ await N('—— 序章 ——\n颱風來的前一天，台北。');
+ setPor('me','point');await say('me','我叫許晴，在台北開了一間小小的偵探事務所。專長是找人、找東西，還有找出謊話。');
+ await N('那天，事務所收到一封手寫信。寄件人是山城老街「福記」糕餅店的阿福伯——小時候，阿嬤每次帶我回老街，都會買他做的芋粿。');
+ await N('阿嬤以前也在這條老街開過一間雜貨店。我國中那年，她被人逼著把店賣掉，搬到台北以後，就再也沒回來過。');
+ await say('fu','（信）小晴，最近一直有人來店裡逼我賣掉福記，還說些奇怪的話。阿伯心裡不安，妳能回來一趟嗎？');
+ setPor('me','point');await say('me','我搭了最後一班客運上山，住進老街口的民宿。打算明天一早，就去福記找阿伯問清楚。');
+ setPor(null);await N('可是那天晚上，颱風提早登陸了。\n我還來不及見到阿伯——');
+}
+/* ---------- intro ---------- */
+async function intro(){
+ $('#title').style.display='none';await prologue();await chapter('第一章<br>颱風夜');
+ setBg('street');SFX.thunder();
+ await N('颱風夜，山城老街。晚上八點四十分，整條街突然停電。');
+ await N('九點半，百年糕餅店「福記」的老闆阿福伯，被發現倒在後面的倉庫裡。\n手裡，緊緊握著一塊吃到一半的芋粿。');
+ await say('doc','（電話）阿福伯驗出了大量安眠藥，正在昏睡。幸好發現得早，沒有生命危險。');
+ await getEv('hosp');
+ await say('me','我是偵探許晴。阿伯找我來，就是怕出事……雨停之前，所有人都下不了山——兇手，就在這條街上。');
+ await N('🔍 點畫面上發光的地方調查；用下方按鈕跟人說話。\n📒 證物隨時可以在右上角查看；證詞卡關可以按「💡 提示」。');
+ S.scene='street';
+}
+const SKEY='laojie';
+/* ---------- save / load ---------- */
+const SAVE_V=2;let lastSnap=null;
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const SLOTS=['auto','s1','s2','s3'],skey=s=>SKEY+'_'+s;
+function chapName(){return S.flags.final?'最終對質':S.flags.ch2?'第二章':'第一章'}
+function snapshot(){if(S.ended||!S.scene||!SC[S.scene])return;
+ const H={};if(typeof T!=='undefined')for(const k in T)if(T[k]&&T[k]._h)H[k]=T[k]._h;
+ lastSnap={v:SAVE_V,t:Date.now(),chap:chapName(),place:SC[S.scene].name,evn:S.ev.length,hearts:S.hearts,bgm:bgmOn,H,S:JSON.parse(JSON.stringify(S))};
+ LS.set(skey('auto'),JSON.stringify(lastSnap))}
+function readSlot(s){try{const d=JSON.parse(LS.get(skey(s)));if(!d||d.v!==SAVE_V||!d.S||!Array.isArray(d.S.ev)||!SC[d.S.scene]||typeof d.S.flags!=='object')return null;return d}catch(e){return null}}
+const latest=()=>SLOTS.map(readSlot).filter(Boolean).sort((a,b)=>b.t-a.t)[0]||null;
+const fmtT=t=>new Date(t).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'（台北）';
+function applySave(d){for(const k of Object.keys(S))delete S[k];Object.assign(S,JSON.parse(JSON.stringify(d.S)));S.ended=false;
+ if(typeof T!=='undefined')for(const k in T)if(T[k])T[k]._h=(d.H||{})[k]||0;
+ if(typeof d.bgm==='boolean'&&d.bgm!==bgmOn){bgmOn=d.bgm;LS.set(SKEY+'_bgm',bgmOn?'on':'off');if(MB&&AC)MB.gain.value=bgmOn?1:0}
+ $('#bgmBtn').textContent=bgmOn?'♪ 開':'♪ 關';$('#evBtn').style.display=S.ev.length?'':'none';
+ $('#title').style.display='none';$('#menuBtn').style.display='';closeSv();hearts();setBg(SC[S.scene].bg);window.__fast=window.__fast||false;renderScene()}
+function doLoad(d){if(started){LS.set(SKEY+'_pending',JSON.stringify(d));location.reload()}else{try{ac()}catch(e){}started=true;applySave(d)}}
+let started=false;
+/* overlay UI */
+const sv=document.createElement('div');sv.id='sv';document.getElementById('app').appendChild(sv);
+const st=document.createElement('style');st.textContent=`#sv{position:absolute;inset:0;z-index:30;background:rgba(0,0,0,.88);display:none;flex-direction:column;justify-content:center;padding:18px;gap:10px}
+#sv h2{color:#f5c26b;text-align:center;margin:0 0 6px}#sv .slot{background:#1d2440;border:2px solid #f5c26b;border-radius:12px;color:#fff;padding:10px 12px;text-align:left;font-size:14px;line-height:1.5}
+#sv .slot b{color:#f5c26b}#sv .slot.empty{opacity:.6}#sv .note{color:#aaa;font-size:12px;text-align:center}#sv .btn{flex:none}
+#menuPop{position:absolute;right:10px;top:calc(max(10px,env(safe-area-inset-top)) + 40px);z-index:25;display:none;flex-direction:column;gap:6px;background:#0d1226ee;border:2px solid #f5c26b;border-radius:12px;padding:8px}
+#menuPop .hb{margin:0;font-size:14px;padding:8px 14px;background:#2a3a6a;text-align:left}`;document.head.appendChild(st);
+function closeSv(){sv.style.display='none';sv.innerHTML=''}
+function ask(msg){return new Promise(r=>{sv.innerHTML=`<h2>確認</h2><div class="note" style="color:#fff;font-size:16px">${msg}</div>`;const y=document.createElement('button');y.className='btn red';y.id='svYes';y.textContent='確定';const n=document.createElement('button');n.className='btn';n.id='svNo';n.textContent='取消';y.onclick=()=>{closeSv();r(true)};n.onclick=()=>{closeSv();r(false)};sv.append(y,n);sv.style.display='flex'})}
+function slotHtml(s,d){const nm=s==='auto'?'自動存檔':'存檔 '+s[1];return d?`<b>${nm}</b>　${fmtT(d.t)}<br>${d.chap}・${d.place}<br>📒 證物 ${d.evn}　❤️ ${d.hearts}/5`:`<b>${nm}</b>　（空）`}
+function openSv(mode){sv.innerHTML=`<h2>${mode==='save'?'💾 存檔':'📂 讀檔'}</h2>`;
+ (mode==='save'?SLOTS.slice(1):SLOTS).forEach(s=>{const d=readSlot(s),b=document.createElement('button');b.className='slot'+(d?'':' empty');b.dataset.slot=s;b.innerHTML=slotHtml(s,d);
+  b.onclick=async()=>{if(mode==='save'){if(!lastSnap)return;if(d&&!(await ask(`覆蓋「存檔 ${s[1]}」？`)))return openSv('save');const o={...lastSnap,t:Date.now()};const ok=LS.set(skey(s),JSON.stringify(o));openSv('save');if(!ok)sv.querySelector('h2').textContent='⚠️ 無法存檔（私密瀏覽？）'}else if(d)doLoad(d)};sv.appendChild(b)});
+ const n=document.createElement('div');n.className='note';n.textContent=mode==='save'?'會記錄最近一次回到場景畫面時的進度。':'讀檔會回到該存檔的場景畫面。';sv.appendChild(n);
+ const c=document.createElement('button');c.className='btn';c.id='svClose';c.textContent='關閉';c.onclick=()=>{closeSv();refreshTitle()};sv.appendChild(c);sv.style.display='flex'}
+/* ☰ menu */
+(()=>{const lb=$('#logBtn'),bb=$('#bgmBtn'),m=document.createElement('button');m.className='hb';m.id='menuBtn';m.style.background='#2a3a6a';m.textContent='☰ 選單';lb.parentNode.insertBefore(m,lb);
+ const p=document.createElement('div');p.id='menuPop';document.getElementById('app').appendChild(p);
+ const sb=document.createElement('button');sb.className='hb';sb.id='saveBtn';sb.textContent='💾 存檔';const ldb=document.createElement('button');ldb.className='hb';ldb.id='loadBtn';ldb.textContent='📂 讀檔';
+ lb.textContent='📜 回顧';p.append(sb,ldb,lb,bb);
+ m.onclick=e=>{e.stopPropagation();sb.style.display=started?'':'none';p.style.display=p.style.display==='flex'?'none':'flex'};
+ p.addEventListener('click',e=>{e.stopPropagation();setTimeout(()=>p.style.display='none',0)});
+ sb.onclick=()=>openSv('save');ldb.onclick=()=>openSv('load')})();
+/* title */
+const tl=$('#tbtns'),cb=document.createElement('button'),lb2=document.createElement('button');
+cb.className='btn red';cb.id='contBtn';cb.textContent='▶ 繼續遊戲';lb2.className='btn';lb2.id='titleLoadBtn';lb2.textContent='📂 讀取進度';
+[cb,lb2].forEach(b=>{b.style.flex='none';b.style.width='60%';b.style.marginBottom='10px'});tl.insertBefore(lb2,$('#startBtn'));tl.insertBefore(cb,lb2);
+function refreshTitle(){$('#menuBtn').style.display=started?'':'none';const h=!!latest();cb.style.display=lb2.style.display=h?'':'none';$('#startBtn').textContent=h?'新遊戲':START_TXT;$('#startBtn').className=h?'btn':'btn red'}
+const START_TXT=$('#startBtn').textContent;
+cb.onclick=()=>{const d=latest();if(d)doLoad(d)};lb2.onclick=()=>openSv('load');
+$('#startBtn').onclick=async()=>{if(latest()&&!(await ask('開始新遊戲？<br>（存檔不會被刪除，但自動存檔會被覆蓋）')))return;started=true;$('#menuBtn').style.display='';ac();rsize();await intro();renderScene()};
+const _rs=renderScene;renderScene=function(){_rs();snapshot()};
+refreshTitle();
+(()=>{const p=LS.get(SKEY+'_pending');if(!p)return;LS.del(SKEY+'_pending');try{const d=JSON.parse(p);if(d&&d.v===SAVE_V&&SC[d.S.scene]){started=true;applySave(d)}}catch(e){}})();
+
+rsize();setBg('street');
+</script></body></html>

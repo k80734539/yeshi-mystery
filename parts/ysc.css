@@ -1,0 +1,6 @@
+<style id="ysc">
+#mlist .ev.pz{min-height:0;justify-content:center;padding:10px 12px}
+#mlist .ev.pz.used{opacity:.5;filter:grayscale(.5);pointer-events:none}
+#mlist .ev.pz.tl{align-items:flex-start;text-align:left;font-size:14px;line-height:1.4}
+#mlist .ev.pz.tl.used{border-color:#d1361e;opacity:.8;filter:none}
+</style>
