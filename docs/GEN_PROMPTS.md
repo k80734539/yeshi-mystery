@@ -1,6 +1,6 @@
 # 角色立繪生圖指令（綠幕版）
 
-適用：《老街迷香》6 位、《夜市無聲》7 位角色重畫。許晴已完成，不用再畫。
+適用：《老街迷香》6 位、《夜市無聲》7 位、《霧鎖山莊》7 位角色重畫。許晴已完成，不用再畫。
 
 ## 每次生成前先做這三件事
 1. 把**許晴的新立繪**（四格那張）上傳當「畫風參考」。
@@ -167,6 +167,83 @@ Expressions:
 2. nervous: eyebrows raised, uneasy.
 3. sad: head slightly down, weary.
 4. broken: furious, shouting.
+```
+
+---
+
+## 《霧鎖山莊・紅傘之怨》
+
+> 這款沒有許晴，主角是周予安。畫風參考圖請用**已經畫好的新畫風角色**（例如新版的阿傑或林先生），長相參考圖用該角色現在的立繪。
+> 表情格順序仍是 normal / nervous / sad / broken；遊戲目前只用到 normal、nervous、broken（周予安另外有 point），`sad` 是備用。
+
+### 周予安（an）
+```
+Character: Zhou Yu-An, young man about 20, slightly messy dark brown hair, clear eyes, navy hooded jacket over a gray knit sweater, a small red magnifying-glass badge on the chest, holding a black notebook.
+Expressions (this one has a "point" instead of "sad"; order: top-left, top-right, bottom-left, bottom-right):
+1. normal: calm, gentle, slightly smiling.
+2. nervous: uneasy, sweat drop, glancing aside.
+3. broken: shaken, eyes wide, deeply distressed.
+4. point: pointing straight at the viewer, serious and sharp.
+```
+
+### 導遊陳伯（chen）
+```
+Character: Guide Uncle Chen, man about 62, short gray hair, tanned weathered face, olive utility vest over a red-and-blue plaid shirt, gray towel around his neck, holding a black handheld radio.
+Expressions:
+1. normal: steady, experienced look.
+2. nervous: frowning, glancing around, gripping the radio.
+3. sad: eyes lowered, sighing.
+4. broken: terrified, mouth open, hand shaking.
+```
+
+### 社長黃俊凱（kai）
+```
+Character: Club president Huang Jun-Kai, young man about 24, neat short black hair with tapered sides, navy zip jacket over a plain white T-shirt, silver wristwatch, calm confident posture, one hand in pocket.
+Expressions:
+1. normal: composed, faint smile.
+2. nervous: tense jaw, avoiding eye contact.
+3. sad: head lowered, regretful.
+4. broken: collapsed composure, eyes wide, voice breaking.
+```
+
+### 學長志明（ming）
+```
+Character: Senior Zhi-Ming, young man about 23, tall, spiky black hair, tanned skin, sharp eyebrows, black-and-white varsity jacket with a white shield emblem on the chest, black T-shirt, arms crossed.
+Expressions:
+1. normal: stern, arms crossed, glaring slightly.
+2. nervous: restless, biting his lip, eyes darting.
+3. sad: head lowered, jaw clenched, hurt.
+4. broken: shouting, furious and panicked, fist raised.
+```
+
+### 學妹佳穎（ying）
+```
+Character: Junior Jia-Ying, young woman about 20, shoulder-length wavy black hair, fair skin, cream off-shoulder knit top, dark plaid pleated skirt, holding a smartphone with both hands.
+Expressions:
+1. normal: quiet, slightly shy, looking at her phone.
+2. nervous: anxious, biting her lip, hugging the phone to her chest.
+3. sad: eyes lowered, trembling.
+4. broken: crying, tears, hands covering her face.
+```
+
+### 攝影師阿哲（zhe）
+```
+Character: Photographer Ah-Zhe, man about 28, long dark hair loosely tied back, light stubble, army-green overshirt over a black T-shirt, camera strap across the chest, holding a DSLR camera, small tattoo on the back of his hand.
+Expressions:
+1. normal: relaxed, lopsided smile.
+2. nervous: wary, eyes narrowed, hand tightening on the camera.
+3. sad: lowering the camera, gloomy.
+4. broken: wide-eyed shock, nearly dropping the camera.
+```
+
+### 老闆娘玉珍（zhen）
+```
+Character: Innkeeper Yu-Zhen, woman about 50, dark hair with gray streaks in a neat low bun, composed pale face, dark green floral qipao-style top under a light gray cardigan, holding a bunch of old brass keys.
+Expressions:
+1. normal: calm, formal, expressionless politeness.
+2. nervous: eyes lowered, fingers tightening on the keys.
+3. sad: weary, eyes wet but composed.
+4. broken: face crumbling, tears, hand pressed to her mouth.
 ```
 
 ---
