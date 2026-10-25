@@ -1334,7 +1334,7 @@ async function goodEnd(){
  const [sc,rk]=rank();const STY={sym:'💗 同情型偵探',firm:'🔥 強硬型偵探',calm:'❄️ 冷靜型偵探'}[domStance()];window.__score={sc,rk,hearts:S.hearts,hints:S.hints,miss:S.miss,secrets:SECN(),style:domStance()};try{localStorage.setItem('yeshi_clear','1');const ob=JSON.parse(localStorage.getItem('yeshi_best')||'null');if(!ob||sc>ob.sc)localStorage.setItem('yeshi_best',JSON.stringify({sc,rk,t:Date.now()}));if(S.ev.includes('yunling'))localStorage.setItem('yeshi_cloud','1')}catch(e){}
  await chapter(`GOOD END<br>〈夜市無聲〉<br><span style="font-size:16px">真相：莊美玲提前殺人、用冷凍貨櫃拖延死亡時間，再趁停電嫁禍陳大海</span><br><span style="font-size:18px">❤️ 剩餘心數 ${S.hearts}/5<br>💡 使用提示 ${S.hints} 次　❌ 失誤 ${S.miss} 次<br>🔑 聽見的祕密 ${SECN()}/5　${STY}<br>分數 ${sc}</span><br><span id="rank" style="font-size:54px;color:#ff5a4a">${rk}</span>`);
  $('#chap').style.display='flex';await sleep(window.__fast?100:2500);$('#chap').style.display='none';
- await N(`🏆 評價：${rk} 級（分數 ${sc}）\n心數 ×20 − 提示 ×5 − 失誤 ×2 ＋ 祕密 ×3 ＋ 支線 3\n你的風格：${STY}`);
+ await N(`🏆 評價：${rk} 級（分數 ${sc}）\n心數 ×20 − 提示 ×5 − 失誤 ×2 ＋ 祕密 ×3 ＋ 支線 3\n你的風格：${STY}${SECN()<5?`\n🔁 還有 ${5-SECN()} 個祕密沒聽到；換一種態度（同情／強硬／冷靜），結局的對話也會不同。`:'\n🔁 換一種態度（同情／強硬／冷靜）重玩，結局的對話會不同。'}`);
  await choose([['再玩一次','r','red']]);location.reload();
 }
 /* ---------- prologue ---------- */
