@@ -190,6 +190,18 @@ html,body{margin:0;height:100%;background:#000;color:#fff;font-family:"PingFang 
 @media (prefers-reduced-motion:reduce){#lkx .btn.rdy{animation:none}}
 </style>
 <style id="fix1">#hud{justify-content:flex-end}#place{position:absolute;left:12px;top:100%;margin-top:-2px;max-width:calc(100% - 24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(12px,3.4vw,15px)!important;letter-spacing:.5px!important;background:rgba(0,0,0,.45);border-radius:10px;padding:2px 10px;pointer-events:none}#hud>div:last-child{flex:none}#por{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 96%,transparent 100%),linear-gradient(to bottom,#000 82%,transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 4%,#000 96%,transparent 100%),linear-gradient(to bottom,#000 82%,transparent 100%);-webkit-mask-composite:source-in;mask-composite:intersect}</style>
+<style id="fix2">
+.hot{border:none!important;background:none!important;animation:none!important;align-items:center!important;justify-content:center!important}
+.hot::before{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,rgba(255,214,120,.95) 24% 46%,rgba(255,214,120,0) 72%);box-shadow:0 0 14px 4px rgba(255,200,80,.65);animation:hpulse 1.7s ease-in-out infinite;pointer-events:none}
+.hot span{position:absolute!important;left:50%;top:calc(50% + 14px);transform:translateX(-50%);margin:0!important;font-size:11px!important;background:rgba(0,0,0,.62)!important;padding:1px 7px!important;border-radius:8px!important;pointer-events:none}
+.hot.done::before{animation:none;opacity:.4;box-shadow:none;background:radial-gradient(circle,#ddd 0 26%,rgba(200,200,200,0) 70%)}
+.hot.done span{opacity:.55}
+@keyframes hpulse{0%,100%{transform:scale(.75);opacity:.75}50%{transform:scale(1.25);opacity:1}}
+#tbar{gap:5px!important;flex-wrap:wrap}
+#tbar .btn,#tbar .r2{flex:1 1 0!important;flex-basis:0!important;min-height:38px!important;padding:6px 2px!important;font-size:13px!important;border-radius:12px!important;white-space:nowrap}
+#tbar .hint,#tbar .leave{flex:1 1 calc(50% - 3px)!important;flex-basis:calc(50% - 3px)!important;min-height:32px!important;font-size:12.5px!important}#tbar .leave{opacity:.9}
+#ffBtn.on{outline:2px solid #ffcf6a}
+</style>
 </head><body><div id="app">
 <div id="bg"></div><canvas id="fx"></canvas>
 <img id="por" alt="">
@@ -315,16 +327,21 @@ box.addEventListener('click',()=>{ac();if(typing){skip=true}else if(waiter){cons
 let typing=false;
 function setPor(c,e='normal',fx){if(!c){por.classList.remove('on');por.dataset.c='';return}const src=ART[c+'_'+e]||ART[c+'_'+({broken:'sad',nervous:'sad',surprised:'sad',angry:'sad',point:'normal'}[e])]||ART[c+'_normal'];if(por.dataset.k!==c+e){por.src=src;por.dataset.k=c+e}por.dataset.c=c;por.classList.add('on');if(fx){por.classList.remove('shake');void por.offsetWidth;por.classList.add('shake')}}
 const LOG=[];function onTap(el,fn){let tt=0;el.addEventListener('touchend',ev=>{ev.preventDefault();tt=Date.now();fn(ev)},{passive:false});el.addEventListener('click',ev=>{if(Date.now()-tt<700)return;fn(ev)})}
+const FF={on:false,seen:new Set(),t:0,key:'ffseen_'+location.pathname,
+ h(s){let x=5381;for(let i=0;i<s.length;i++)x=((x<<5)+x+s.charCodeAt(i))|0;return (x>>>0).toString(36)+s.length},
+ load(){try{JSON.parse(localStorage.getItem(this.key)||'[]').forEach(v=>this.seen.add(v))}catch(e){}},
+ add(k){this.seen.add(k);clearTimeout(this.t);this.t=setTimeout(()=>{try{localStorage.setItem(this.key,JSON.stringify([...this.seen].slice(-4000)))}catch(e){}},600)}};FF.load();
 async function say(who,t,e,opt={}){
  if(!opt.test){LOG.push([who?(CH[who]||who):'',t]);if(LOG.length>60)LOG.shift()}
  box.style.display='block';const nmT=(who?(CH[who]||who):'')+(opt.tag||'');if(opt.chip){nm.textContent=nmT;const cp=document.createElement('span');cp.className='chip';cp.textContent=opt.chip;nm.appendChild(cp)}else nm.textContent=nmT;txt.className=opt.test?'test':'';
  box.classList.toggle('tmode',!!opt.test);box.classList.remove('press');if(opt.press){void box.offsetWidth;box.classList.add('press')}
  if(who&&ART[who+'_normal'])setPor(who,e||'normal',opt.shake);else if(who&&who!=='me')setPor(null);
- typing=true;skip=false;txt.textContent='';const vt=t.replace(/[【】]/g,'');
- for(let i=0;i<vt.length;i++){if(skip||window.__fast){txt.innerHTML=rt(t,1e9);break}txt.innerHTML=rt(t,i+1);if(i%2==0&&vt[i]!=' ')SFX.blip();await sleep(vt[i]==='…'||vt[i]==='。'?90:28)}
+ typing=true;skip=false;txt.textContent='';const vt=t.replace(/[【】]/g,'');const _k=FF.h((who||'')+'|'+t),_ff=FF.on&&FF.seen.has(_k);
+ for(let i=0;i<vt.length;i++){if(skip||window.__fast||_ff){txt.innerHTML=rt(t,1e9);break}txt.innerHTML=rt(t,i+1);if(i%2==0&&vt[i]!=' ')SFX.blip();await sleep(vt[i]==='…'||vt[i]==='。'?90:28)}
  typing=false;$('#nxt').style.display='block';
  if(opt.noWait)return;
- await new Promise(r=>waiter=r);
+ if(_ff){await sleep(30);return}
+ await new Promise(r=>waiter=r);FF.add(_k);
 }
 const N=(t,o)=>say('',t,null,o);
 function rt(t,n){let h='',c=0,k=false;const E={'&':'&amp;','<':'&lt;','>':'&gt;'};for(const ch of t){if(ch==='【'){if(!k){h+='<b class="kw">';k=true}continue}if(ch==='】'){if(k){h+='</b>';k=false}continue}if(c>=n)break;h+=E[ch]||ch;c++}return h+(k?'</b>':'')}
@@ -1377,7 +1394,7 @@ function openSv(mode){sv.innerHTML=`<h2>${mode==='save'?'💾 存檔':'📂 讀�
 (()=>{const lb=$('#logBtn'),bb=$('#bgmBtn'),m=document.createElement('button');m.className='hb';m.id='menuBtn';m.style.background='#2a3a6a';m.textContent='☰ 選單';lb.parentNode.insertBefore(m,lb);
  const p=document.createElement('div');p.id='menuPop';document.getElementById('app').appendChild(p);
  const sb=document.createElement('button');sb.className='hb';sb.id='saveBtn';sb.textContent='💾 存檔';const ldb=document.createElement('button');ldb.className='hb';ldb.id='loadBtn';ldb.textContent='📂 讀檔';
- lb.textContent='📜 回顧';p.append(sb,ldb,lb,bb);
+ lb.textContent='📜 回顧';const ff=document.createElement('button');ff.className='hb';ff.id='ffBtn';const ffUp=()=>{ff.textContent=FF.on?'⏩ 已讀快轉：開':'⏩ 已讀快轉：關';ff.style.background=FF.on?'#8a5a10':'#2a3a6a';ff.classList.toggle('on',FF.on)};ffUp();ff.onclick=()=>{FF.on=!FF.on;ffUp()};p.append(sb,ldb,lb,bb,ff);
  m.onclick=e=>{e.stopPropagation();sb.style.display=started?'':'none';p.style.display=p.style.display==='flex'?'none':'flex'};
  p.addEventListener('click',e=>{e.stopPropagation();setTimeout(()=>p.style.display='none',0)});
  sb.onclick=()=>openSv('save');ldb.onclick=()=>openSv('load')})();
